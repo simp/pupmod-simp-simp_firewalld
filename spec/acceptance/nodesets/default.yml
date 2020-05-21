@@ -1,0 +1,28 @@
+<%
+  if ENV['BEAKER_HYPERVISOR']
+    hypervisor = ENV['BEAKER_HYPERVISOR']
+  else
+    hypervisor = 'vagrant'
+  end
+-%>
+HOSTS:
+  el7:
+    roles:
+      - default
+    platform: el-7-x86_64
+    box: centos/7
+    hypervisor: <%= hypervisor %>
+
+  el8:
+    platform: el-8-x86_64
+    box: generic/centos8
+    hypervisor: <%= hypervisor %>
+
+CONFIG:
+  type: aio
+  vagrant_memsize: 256
+  log_level: verbose
+  synced_folder: disabled
+<% if ENV['BEAKER_PUPPET_COLLECTION'] -%>
+  puppet_collection: <%= ENV['BEAKER_PUPPET_COLLECTION'] %>
+<% end -%>

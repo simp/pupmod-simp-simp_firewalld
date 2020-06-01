@@ -38,7 +38,6 @@ variables:
 # --------------------------------------
 .setup_bundler_env: &setup_bundler_env
   cache:
-    untracked: true
     key: "${CI_PROJECT_NAMESPACE}_ruby-${MATRIX_RUBY_VERSION}_bundler"
     paths:
       - '.vendor'

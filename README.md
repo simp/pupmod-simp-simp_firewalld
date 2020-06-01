@@ -15,8 +15,8 @@
   * [Beginning with simp_firewalld](#beginning-with-simp_firewalld)
 * [Usage](#usage)
   * [Opening a specific port](#opening-a-specific-port)
-  * [Allowing full access from a specific node](#allowing-full-access-from-a-specific-node)
   * [Allowing a range of TCP ports over IPv4](#allowing-a-range-of-tcp-ports-over-ipv4)
+  * [Allowing full access from a specific node](#allowing-full-access-from-a-specific-node)
 * [Reference](#reference)
 * [Limitations](#limitations)
 * [Development](#development)
@@ -101,19 +101,9 @@ framework**, the `trusted_nets` parameter will default to the value of
 
 ```puppet
   simp_firewalld::rule { 'allow_ssh_to_trusted_nets':
-    trusted_nets => $simp_options::trusted_nets, 
     protocol     => tcp,
     dports       => 22
   }
-```
-
-### Allowing full access from a specific node
-
-```puppet
-simp_firewalld::rule { 'allow_all_to_central_management':
-  trusted_nets => ['10.10.35.100'],
-  protocol     => 'all',
-}
 ```
 
 ### Allowing a range of TCP ports over IPv4
@@ -123,6 +113,15 @@ simp_firewalld::rule { 'allow_tcp_range':
   trusted_nets => ['192.168.1.0/24'],
   dports       => ['1024:60000'],
   apply_to     => 'ipv4',
+}
+```
+
+### Allowing full access from a specific node
+
+```puppet
+simp_firewalld::rule { 'allow_all_to_central_management':
+  trusted_nets => ['10.10.35.100'],
+  protocol     => 'all',
 }
 ```
 

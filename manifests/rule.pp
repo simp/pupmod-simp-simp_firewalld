@@ -48,8 +48,8 @@
 #   * Will default to `$simp_firewalld::default_zone` if set and `99_simp` otherwise
 #
 define simp_firewalld::rule (
-  Simplib::Netlist                        $trusted_nets,
   Enum['icmp','tcp','udp','all']          $protocol,
+  Simplib::Netlist                        $trusted_nets  = simplib::lookup('simp_options::trusted_nets', { 'default_value' => ['127.0.0.1'] }),
   Optional[Simp_firewalld::DestPort]      $dports        = undef,
   Optional[Variant[Array[String],String]] $icmp_blocks   = undef,
   Integer[0]                              $order         = 11,

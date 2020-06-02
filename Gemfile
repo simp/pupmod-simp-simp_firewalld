@@ -27,4 +27,5 @@ group :system_tests do
   gem 'beaker'
   gem 'beaker-rspec'
   gem 'simp-beaker-helpers', ENV.fetch('SIMP_BEAKER_HELPERS_VERSION', '~> 1.12')
+  gem 'net-ssh', '~> 5.2' # workaround for BKR-1655
 end

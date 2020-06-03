@@ -81,7 +81,8 @@ class simp_firewalld (
   String[1]                                            $tidy_prefix          = 'simp_',
   Integer[1]                                           $tidy_minutes         = 10,
   Array[Optional[String[1]]]                           $simp_zone_interfaces = [],
-  Enum['default', 'ACCEPT', 'REJECT', 'DROP']          $simp_zone_target     = 'DROP'
+  Enum['default', 'ACCEPT', 'REJECT', 'DROP']          $simp_zone_target     = 'DROP',
+  String[1]                                            $package_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })
 ) {
   if $enable {
     Exec { path => '/usr/bin:/bin' }
@@ -93,7 +94,8 @@ class simp_firewalld (
       lockdown         => $_lockdown_xlat,
       default_zone     => $default_zone,
       log_denied       => $log_denied,
-      firewall_backend => $firewall_backend
+      firewall_backend => $firewall_backend,
+      package_ensure   => $package_ensure
     }
 
     unless $complete_reload {

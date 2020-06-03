@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
 
-# This covers the iptables::rule tests for the following:
+# This covers the simp_firewalld::rule tests for the following:
 #
 #   * ALL rules
 #   * IPSets

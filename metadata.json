@@ -1,0 +1,58 @@
+{
+  "name": "simp-simp_firewalld",
+  "version": "0.1.0",
+  "author": "SIMP Team",
+  "summary": "SIMP-oriented firewalld management",
+  "license": "Apache-2.0",
+  "source": "https://github.com/simp/pupmod-simp-simp_firewalld",
+  "project_page": "https://github.com/simp/pupmod-simp-simp_firewalld",
+  "issues_url": "https://simp-project.atlassian.net",
+  "tags": [
+    "simp",
+    "firewalld",
+    "firewall"
+  ],
+  "dependencies": [
+    {
+      "name": "puppet/firewalld",
+      "version_requirement": ">= 4.2.3 < 5.0.0"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.13.1 < 7.0.0"
+    },
+    {
+      "name": "simp/simplib",
+      "version_requirement": ">= 4.0.1 < 5.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 5.0.0 < 7.0.0"
+    }
+  ]
+}

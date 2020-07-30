@@ -75,14 +75,14 @@ class simp_firewalld (
   Array[Stdlib::Absolutepath]                          $tidy_dirs            = [
                                                                                  '/etc/firewalld/icmptypes',
                                                                                  '/etc/firewalld/ipsets',
-                                                                                 '/etc/firewalld/services'
+                                                                                 '/etc/firewalld/services',
                                                                                ],
   # lint:endignore
   String[1]                                            $tidy_prefix          = 'simp_',
   Integer[1]                                           $tidy_minutes         = 10,
   Array[Optional[String[1]]]                           $simp_zone_interfaces = [],
   Enum['default', 'ACCEPT', 'REJECT', 'DROP']          $simp_zone_target     = 'DROP',
-  String[1]                                            $package_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })
+  String[1]                                            $package_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
 ) {
   if $enable {
     Exec { path => '/usr/bin:/bin' }
@@ -95,7 +95,7 @@ class simp_firewalld (
       default_zone     => $default_zone,
       log_denied       => $log_denied,
       firewall_backend => $firewall_backend,
-      package_ensure   => $package_ensure
+      package_ensure   => $package_ensure,
     }
 
     unless $complete_reload {
@@ -110,7 +110,7 @@ class simp_firewalld (
       purge_ports      => true,
       interfaces       => $simp_zone_interfaces,
       target           => $simp_zone_target,
-      require          => Service['firewalld']
+      require          => Service['firewalld'],
     }
 
     if $default_zone == '99_simp' {
@@ -123,7 +123,7 @@ class simp_firewalld (
         backup  => false,
         matches => [$tidy_prefix],
         recurse => true,
-        type    => 'mtime'
+        type    => 'mtime',
       }
     }
   }

@@ -48,14 +48,14 @@
 #   * Will default to `$simp_firewalld::default_zone` if set and `99_simp` otherwise
 #
 define simp_firewalld::rule (
-  Enum['icmp','tcp','udp','all']          $protocol,
-  Simplib::Netlist                        $trusted_nets  = simplib::lookup('simp_options::trusted_nets', { 'default_value' => ['127.0.0.1'] }),
-  Optional[Simp_firewalld::DestPort]      $dports        = undef,
-  Optional[Variant[Array[String],String]] $icmp_blocks   = undef,
-  Integer[0]                              $order         = 11,
-  Simp_firewalld::ApplyTo                 $apply_to      = 'auto',
-  Optional[String[1]]                     $prefix        = undef,
-  Optional[String[1]]                     $zone          = undef
+  Enum['ah', 'esp', 'icmp', 'tcp', 'udp', 'all'] $protocol,
+  Simplib::Netlist                               $trusted_nets  = simplib::lookup('simp_options::trusted_nets', { 'default_value' => ['127.0.0.1'] }),
+  Optional[Simp_firewalld::DestPort]             $dports        = undef,
+  Optional[Variant[Array[String],String]]        $icmp_blocks   = undef,
+  Integer[0]                                     $order         = 11,
+  Simp_firewalld::ApplyTo                        $apply_to      = 'auto',
+  Optional[String[1]]                            $prefix        = undef,
+  Optional[String[1]]                            $zone          = undef,
 ) {
   include simp_firewalld
 
@@ -79,6 +79,9 @@ define simp_firewalld::rule (
     if $protocol == 'icmp' {
       $_dports = undef
       $_icmp_block = Array($icmp_blocks)
+    }
+    elsif $protocol in ['ah', 'esp'] {
+      $_dports = undef
     }
     else {
       if $dports {
@@ -104,7 +107,7 @@ define simp_firewalld::rule (
           short       => "${_prefix}${name}",
           description => "SIMP ${name}",
           port        => $_dports,
-          require     => Service['firewalld']
+          require     => Service['firewalld'],
         }
       }
       else {
@@ -129,7 +132,7 @@ define simp_firewalld::rule (
     if $_dports and $_allow_from_all {
       firewalld_service { "${_prefix}${_safe_name}":
         zone    => $_zone,
-        require => Service['firewalld']
+        require => Service['firewalld'],
       }
     }
     else {
@@ -151,10 +154,10 @@ define simp_firewalld::rule (
 
           $_msg_string = join($_tmp_nets_hash['unknown'].keys, ', ')
 
-          notify { "${module_name}::rule[$_safe_name] - hostname warning":
+          notify { "${module_name}::rule[${_safe_name}] - hostname warning":
             message  => "Firewalld cannot handle hostnames and the following were found in 'trusted_nets': '${_msg_string}'",
             withpath => true,
-            loglevel => 'warning'
+            loglevel => 'warning',
           }
         }
 
@@ -221,9 +224,9 @@ define simp_firewalld::rule (
                     'entries' => $_ipset_entries,
                     'type'    => $_ipset_type,
                     'options' => {
-                      'family' => $_ipset_family
+                      'family' => $_ipset_family,
                     },
-                    require   => Service['firewalld']
+                    require   => Service['firewalld'],
                   }
                 )
               }
@@ -234,7 +237,7 @@ define simp_firewalld::rule (
                     'simp',
                     $order,
                     $_safe_name,
-                    $_ipset_name
+                    $_ipset_name,
                   ], '_'),
                 '_+', '_', 'G')
 
@@ -246,7 +249,18 @@ define simp_firewalld::rule (
                   icmp_block => $_icmp_block,
                   action     => 'accept',
                   zone       => $_zone,
-                  require    => Service['firewalld']
+                  require    => Service['firewalld'],
+                }
+              }
+              elsif $protocol in ['ah', 'esp'] {
+                firewalld_rich_rule { $_unique_name:
+                  ensure   => 'present',
+                  family   => $_ip_family,
+                  source   => $_source,
+                  action   => 'accept',
+                  zone     => $_zone,
+                  protocol => $protocol,
+                  require  => Service['firewalld'],
                 }
               }
               else {
@@ -267,7 +281,7 @@ define simp_firewalld::rule (
                   service => $_rich_rule_svc,
                   action  => 'accept',
                   zone    => $_zone,
-                  require => Service['firewalld']
+                  require => Service['firewalld'],
                 }
               }
             }

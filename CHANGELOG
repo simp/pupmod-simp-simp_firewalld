@@ -1,2 +1,5 @@
+* Thu Jul 30 2020 Adam Yohrling <adam.yohrling@onyxpoint.com> - 0.1.1
+- Add support for ESP and AH protocol rules
+
 * Thu May 21 2020 Trevor Vaughan <tvaughan@onyxpoint.com> - 0.1.0
 - Initial module release

@@ -170,7 +170,7 @@ The networks/hosts to which the rule applies
 
 ##### `protocol`
 
-Data type: `Enum['icmp','tcp','udp','all']`
+Data type: `Enum['ah','esp','icmp','tcp','udp','all']`
 
 The network protocol to which the rule applies
 

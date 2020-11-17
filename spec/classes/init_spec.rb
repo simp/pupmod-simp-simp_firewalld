@@ -14,14 +14,14 @@ describe 'simp_firewalld' do
           it { is_expected.to compile.with_all_deps }
           it { is_expected.to create_class('simp_firewalld').with_enable(true) }
 
-          it { is_expected.to create_class('firewalld').with(
-              {
-                :lockdown     => 'yes',
-                :default_zone => '99_simp',
-                :log_denied   => 'unicast'
-              }
-            )
+          it { is_expected.to create_class('firewalld')
+            .with_lockdown('yes')
+            .with_default_zone('99_simp')
+            .with_log_denied('unicast')
+            .with_firewall_backend(nil)
+            .with_package_ensure('installed')
           }
+
           it { is_expected.to create_exec('firewalld::complete-reload').with_onlyif('/bin/false') }
           it { is_expected.to create_firewalld_zone('99_simp').with(
               {
@@ -36,6 +36,22 @@ describe 'simp_firewalld' do
           }
 
           it { is_expected.to create_tidy('/etc/firewalld/ipsets').with_matches(['simp_']) }
+        end
+
+        context 'with nftables' do
+          let(:facts) do
+            os_facts.merge({
+              :simplib__firewalls => ['iptables', 'firewalld', 'nft']
+            })
+          end
+
+          it { is_expected.to create_class('firewalld')
+            .with_lockdown('yes')
+            .with_default_zone('99_simp')
+            .with_log_denied('unicast')
+            .with_firewall_backend('iptables')
+            .with_package_ensure('installed')
+          }
         end
       end
     end

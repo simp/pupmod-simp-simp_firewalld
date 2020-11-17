@@ -1,3 +1,7 @@
+* Tue Nov 17 2020 Trevor Vaughan <tvaughan@onyxoint.com> - 0.1.1
+- Ensure that the firewall backend is not set on systems without multiple
+  backends
+
 * Thu Jul 30 2020 Adam Yohrling <adam.yohrling@onyxpoint.com> - 0.1.1
 - Add support for ESP and AH protocol rules
 

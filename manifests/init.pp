@@ -63,6 +63,8 @@
 # @param simp_zone_target
 #   The default target for the 99_simp zone
 #
+# @param package_ensure
+#   The 'ensure' value for package resources
 class simp_firewalld (
   Boolean                                              $enable               = 'firewalld' in pick($facts['simplib__firewalls'], 'none'),
   Boolean                                              $complete_reload      = false,
@@ -90,11 +92,21 @@ class simp_firewalld (
     # Upstream module only takes yes/no values
     $_lockdown_xlat = $lockdown ? { true => 'yes', default => 'no' }
 
+    # The upstream module should handle this properly but it looks like CentOS
+    # may have diverted from the upstream firewalld code making version
+    # matching impossible.
+    if 'nft' in pick($facts.dig('simplib__firewalls'), []) {
+      $_firewall_backend = $firewall_backend
+    }
+    else {
+      $_firewall_backend = undef
+    }
+
     class { 'firewalld':
       lockdown         => $_lockdown_xlat,
       default_zone     => $default_zone,
       log_denied       => $log_denied,
-      firewall_backend => $firewall_backend,
+      firewall_backend => $_firewall_backend,
       package_ensure   => $package_ensure,
     }
 

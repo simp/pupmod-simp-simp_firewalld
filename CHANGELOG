@@ -1,3 +1,6 @@
+* Sat Dec 19 2020 Chris Tessmer <chris.tessmer@onyxpoint.com> - 0.1.3
+- Removed EL6 support
+
 * Tue Nov 17 2020 Trevor Vaughan <tvaughan@onyxoint.com> - 0.1.2
 - Ensure that the firewall backend is not set on systems without multiple
   backends

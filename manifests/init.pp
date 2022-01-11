@@ -71,7 +71,7 @@ class simp_firewalld (
   Boolean                                              $lockdown             = true,
   String[1]                                            $default_zone         = '99_simp',
   Enum['off', 'all','unicast','broadcast','multicast'] $log_denied           = 'unicast',
-  Enum['iptables','nftables']                          $firewall_backend     = 'iptables',
+  Enum['iptables','nftables']                          $firewall_backend,    # data in module
   Boolean                                              $enable_tidy          = true,
   # lint:ignore:2sp_soft_tabs
   Array[Stdlib::Absolutepath]                          $tidy_dirs            = [

@@ -1,3 +1,6 @@
+* Tue Dec 21 2021 Kendall Moore <kendall@sicura.us> - 0.3.0
+- Changed default backend to nftables for RHEL 8
+
 * Wed Jun 16 2021 Chris Tessmer <chris.tessmer@onyxpoint.com> - 0.2.0
 - Removed support for Puppet 5
 - Ensured support for Puppet 7 in requirements and stdlib

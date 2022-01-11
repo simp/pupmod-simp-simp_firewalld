@@ -44,12 +44,15 @@ describe 'simp_firewalld' do
               :simplib__firewalls => ['iptables', 'firewalld', 'nft']
             })
           end
+          let(:params) {{
+            :firewall_backend => 'nftables'
+          }}
 
           it { is_expected.to create_class('firewalld')
             .with_lockdown('yes')
             .with_default_zone('99_simp')
             .with_log_denied('unicast')
-            .with_firewall_backend('iptables')
+            .with_firewall_backend('nftables')
             .with_package_ensure('installed')
           }
         end

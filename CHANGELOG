@@ -1,3 +1,6 @@
+* Sun Feb 13 2022 Trevor Vaughan <trevor@sicura.us> - 0.3.1
+- Support Amazon Linux 2
+
 * Tue Dec 21 2021 Kendall Moore <kendall@sicura.us> - 0.3.0
 - Changed default backend to nftables for RHEL 8
 

@@ -281,7 +281,12 @@ define simp_firewalld::rule (
                   service => $_rich_rule_svc,
                   action  => 'accept',
                   zone    => $_zone,
-                  require => Service['firewalld'],
+                  require => Service['firewalld']
+                }
+
+                # Work around bug in puppet-firewalld
+                if $_rich_rule_svc {
+                  Firewalld_custom_service[$_rich_rule_svc] -> Firewalld_rich_rule[$_unique_name]
                 }
               }
             }

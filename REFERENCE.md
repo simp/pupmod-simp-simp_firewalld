@@ -20,16 +20,30 @@
 
 ## Classes
 
-### `simp_firewalld`
+### <a name="simp_firewalld"></a>`simp_firewalld`
 
 If you want to override any element not present in the `firewalld` class
 resource below then you should use Hiera directly on the `firewalld` class.
 
 #### Parameters
 
-The following parameters are available in the `simp_firewalld` class.
+The following parameters are available in the `simp_firewalld` class:
 
-##### `enable`
+* [`enable`](#enable)
+* [`complete_reload`](#complete_reload)
+* [`lockdown`](#lockdown)
+* [`default_zone`](#default_zone)
+* [`log_denied`](#log_denied)
+* [`firewall_backend`](#firewall_backend)
+* [`enable_tidy`](#enable_tidy)
+* [`tidy_dirs`](#tidy_dirs)
+* [`tidy_prefix`](#tidy_prefix)
+* [`tidy_minutes`](#tidy_minutes)
+* [`simp_zone_interfaces`](#simp_zone_interfaces)
+* [`simp_zone_target`](#simp_zone_target)
+* [`package_ensure`](#package_ensure)
+
+##### <a name="enable"></a>`enable`
 
 Data type: `Boolean`
 
@@ -41,7 +55,7 @@ Activate the firewalld management capabilties.
 
 Default value: `in`
 
-##### `complete_reload`
+##### <a name="complete_reload"></a>`complete_reload`
 
 Data type: `Boolean`
 
@@ -53,7 +67,7 @@ dangerous and this class overrides and disables this capability by default.
 
 Default value: ``false``
 
-##### `lockdown`
+##### <a name="lockdown"></a>`lockdown`
 
 Data type: `Boolean`
 
@@ -65,7 +79,7 @@ applications.
 
 Default value: ``true``
 
-##### `default_zone`
+##### <a name="default_zone"></a>`default_zone`
 
 Data type: `String[1]`
 
@@ -80,7 +94,7 @@ only populate ``99_simp`` zone rules.
 
 Default value: `'99_simp'`
 
-##### `log_denied`
+##### <a name="log_denied"></a>`log_denied`
 
 Data type: `Enum['off', 'all','unicast','broadcast','multicast']`
 
@@ -90,7 +104,7 @@ What types of logs to process for denied packets.
 
 Default value: `'unicast'`
 
-##### `firewall_backend`
+##### <a name="firewall_backend"></a>`firewall_backend`
 
 Data type: `Enum['iptables','nftables']`
 
@@ -98,9 +112,7 @@ Allows you to set the backend that firewalld will use.
 
 * Currently set to 'iptables' due to bugs in nftables
 
-Default value: `'iptables'`
-
-##### `enable_tidy`
+##### <a name="enable_tidy"></a>`enable_tidy`
 
 Data type: `Boolean`
 
@@ -108,7 +120,7 @@ Enable the ``Tidy`` resources that help keep the system clean from cruft
 
 Default value: ``true``
 
-##### `tidy_dirs`
+##### <a name="tidy_dirs"></a>`tidy_dirs`
 
 Data type: `Array[Stdlib::Absolutepath]`
 
@@ -120,7 +132,7 @@ Default value: `[
                                                                                  '/etc/firewalld/services',
                                                                                ]`
 
-##### `tidy_prefix`
+##### <a name="tidy_prefix"></a>`tidy_prefix`
 
 Data type: `String[1]`
 
@@ -128,7 +140,7 @@ The name match to use for tidying files
 
 Default value: `'simp_'`
 
-##### `tidy_minutes`
+##### <a name="tidy_minutes"></a>`tidy_minutes`
 
 Data type: `Integer[1]`
 
@@ -137,7 +149,7 @@ purposes of tidying.
 
 Default value: `10`
 
-##### `simp_zone_interfaces`
+##### <a name="simp_zone_interfaces"></a>`simp_zone_interfaces`
 
 Data type: `Array[Optional[String[1]]]`
 
@@ -145,7 +157,7 @@ The network interfaces to which the underlying 99_simp zone should apply
 
 Default value: `[]`
 
-##### `simp_zone_target`
+##### <a name="simp_zone_target"></a>`simp_zone_target`
 
 Data type: `Enum['default', 'ACCEPT', 'REJECT', 'DROP']`
 
@@ -153,7 +165,7 @@ The default target for the 99_simp zone
 
 Default value: `'DROP'`
 
-##### `package_ensure`
+##### <a name="package_ensure"></a>`package_ensure`
 
 Data type: `String[1]`
 
@@ -163,15 +175,24 @@ Default value: `simplib::lookup('simp_options::package_ensure', { 'default_value
 
 ## Defined types
 
-### `simp_firewalld::rule`
+### <a name="simp_firewalldrule"></a>`simp_firewalld::rule`
 
 Add firewalld rules with various safety checks
 
 #### Parameters
 
-The following parameters are available in the `simp_firewalld::rule` defined type.
+The following parameters are available in the `simp_firewalld::rule` defined type:
 
-##### `trusted_nets`
+* [`trusted_nets`](#trusted_nets)
+* [`protocol`](#protocol)
+* [`dports`](#dports)
+* [`icmp_blocks`](#icmp_blocks)
+* [`order`](#order)
+* [`apply_to`](#apply_to)
+* [`prefix`](#prefix)
+* [`zone`](#zone)
+
+##### <a name="trusted_nets"></a>`trusted_nets`
 
 Data type: `Simplib::Netlist`
 
@@ -179,13 +200,13 @@ The networks/hosts to which the rule applies
 
 Default value: `simplib::lookup('simp_options::trusted_nets', { 'default_value' => ['127.0.0.1'] })`
 
-##### `protocol`
+##### <a name="protocol"></a>`protocol`
 
 Data type: `Enum['ah', 'esp', 'icmp', 'tcp', 'udp', 'all']`
 
 The network protocol to which the rule applies
 
-##### `dports`
+##### <a name="dports"></a>`dports`
 
 Data type: `Optional[Simp_firewalld::DestPort]`
 
@@ -193,7 +214,7 @@ The ports to which the rule applies
 
 Default value: ``undef``
 
-##### `icmp_blocks`
+##### <a name="icmp_blocks"></a>`icmp_blocks`
 
 Data type: `Optional[Variant[Array[String],String]]`
 
@@ -201,7 +222,7 @@ The ICMP Blocks to which the rule applies
 
 Default value: ``undef``
 
-##### `order`
+##### <a name="order"></a>`order`
 
 Data type: `Integer[0]`
 
@@ -222,7 +243,7 @@ version of firewalld explicitly supports it.
 
 Default value: `11`
 
-##### `apply_to`
+##### <a name="apply_to"></a>`apply_to`
 
 Data type: `Simp_firewalld::ApplyTo`
 
@@ -235,7 +256,7 @@ The address family to which to apply this rule
 
 Default value: `'auto'`
 
-##### `prefix`
+##### <a name="prefix"></a>`prefix`
 
 Data type: `Optional[String[1]]`
 
@@ -246,7 +267,7 @@ This will be prepended to all created components
 
 Default value: ``undef``
 
-##### `zone`
+##### <a name="zone"></a>`zone`
 
 Data type: `Optional[String[1]]`
 
@@ -258,21 +279,33 @@ Default value: ``undef``
 
 ## Data types
 
-### `Simp_firewalld::ApplyTo`
+### <a name="simp_firewalldapplyto"></a>`Simp_firewalld::ApplyTo`
 
 Valid families to which rules should apply
 
-Alias of `Enum['ipv4', 'ipv6', 'all', 'auto']`
+Alias of
 
-### `Simp_firewalld::DestPort`
+```puppet
+Enum['ipv4', 'ipv6', 'all', 'auto']
+```
+
+### <a name="simp_firewallddestport"></a>`Simp_firewalld::DestPort`
 
 A ``firewalld::rule`` compatible port range or Array
 
-Alias of `Variant[Simplib::Port, Simp_firewalld::PortRange, Array[Variant[Simplib::Port, Simp_firewalld::PortRange]]]`
+Alias of
 
-### `Simp_firewalld::PortRange`
+```puppet
+Variant[Simplib::Port, Simp_firewalld::PortRange, Array[Variant[Simplib::Port, Simp_firewalld::PortRange]]]
+```
+
+### <a name="simp_firewalldportrange"></a>`Simp_firewalld::PortRange`
 
 A firewalld-compatible Port Range
 
-Alias of `Pattern['^([0-5]?\d?\d?\d?\d|6[0-4]\d\d\d|65[0-4]\d\d|655[0-2]\d|6553[0-5]):([0-5]?\d?\d?\d?\d|6[0-4]\d\d\d|65[0-4]\d\d|655[0-2]\d|6553[0-5])$']`
+Alias of
+
+```puppet
+Pattern['^([0-5]?\d?\d?\d?\d|6[0-4]\d\d\d|65[0-4]\d\d|655[0-2]\d|6553[0-5]):([0-5]?\d?\d?\d?\d|6[0-4]\d\d\d|65[0-4]\d\d|655[0-2]\d|6553[0-5])$']
+```
 

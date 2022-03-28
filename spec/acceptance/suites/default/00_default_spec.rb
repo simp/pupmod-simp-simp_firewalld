@@ -6,7 +6,7 @@ hosts.each do |host|
   describe "simp_firewalld on #{host}" do
     let(:default_manifest) {
       <<-EOS
-        include 'simp_firewalld'
+        class { 'simp_firewalld': enable => true }
 
         simp_firewalld::rule { 'allow_all_ssh':
           trusted_nets => ['all'],

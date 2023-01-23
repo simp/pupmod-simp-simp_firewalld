@@ -18,9 +18,11 @@ HOSTS:
         gpgkeys:
           - https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9
 
-CONFIG:
-  log_level: verbose
+CONFIG: 
   type: aio
+  vagrant_memsize: 256
+  log_level: verbose
+  synced_folder: disabled
 <% if ENV['BEAKER_PUPPET_COLLECTION'] -%>
   puppet_collection: <%= ENV['BEAKER_PUPPET_COLLECTION'] %>
 <% end -%>

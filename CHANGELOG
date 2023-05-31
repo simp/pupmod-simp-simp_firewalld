@@ -1,3 +1,7 @@
+* Thu Jan 19 2023 Michael Riddle <mike@sicura.us> - 0.3.2
+- Support RHEL 9
+- Added a default hieradata file for more flexibility
+
 * Sun Feb 13 2022 Trevor Vaughan <trevor@sicura.us> - 0.3.1
 - Support Amazon Linux 2
 - Work around upstream bug:

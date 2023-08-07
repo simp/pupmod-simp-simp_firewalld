@@ -3,6 +3,26 @@
 # If you want to override any element not present in the `firewalld` class
 # resource below then you should use Hiera directly on the `firewalld` class.
 #
+# @param rules
+#   A hash of firewalld::rules that should be created
+# @example creating a new rule via class declaration:
+#   simp_firewalld::rules => {
+#     'allow_port_22' => {
+#       'protocol' => 'tcp',
+#       'dports'   => 22,
+#     }
+#   }
+# @example same example, but with hieradata
+#   simp_firewalld::rules:
+#     allow_port_22:
+#       protocol: tcp
+#       dports: 22
+#
+# @param firewall_backend
+#   Allows you to set the backend that firewalld will use.
+#
+#   * Currently set to 'iptables' due to bugs in nftables
+#
 # @param enable
 #   Activate the firewalld management capabilties.
 #
@@ -39,11 +59,6 @@
 #
 #   @see LogDenied in firewalld.conf(5)
 #
-# @param firewall_backend
-#   Allows you to set the backend that firewalld will use.
-#
-#   * Currently set to 'iptables' due to bugs in nftables
-#
 # @param enable_tidy
 #   Enable the ``Tidy`` resources that help keep the system clean from cruft
 #
@@ -65,13 +80,15 @@
 #
 # @param package_ensure
 #   The 'ensure' value for package resources
+#
 class simp_firewalld (
+  Optional[Hash]                                       $rules,               # data in module
+  Enum['iptables','nftables']                          $firewall_backend,    # data in module
   Boolean                                              $enable               = 'firewalld' in pick($facts['simplib__firewalls'], 'none'),
   Boolean                                              $complete_reload      = false,
   Boolean                                              $lockdown             = true,
   String[1]                                            $default_zone         = '99_simp',
   Enum['off', 'all','unicast','broadcast','multicast'] $log_denied           = 'unicast',
-  Enum['iptables','nftables']                          $firewall_backend,    # data in module
   Boolean                                              $enable_tidy          = true,
   # lint:ignore:2sp_soft_tabs
   Array[Stdlib::Absolutepath]                          $tidy_dirs            = [
@@ -136,6 +153,12 @@ class simp_firewalld (
         matches => [$tidy_prefix],
         recurse => true,
         type    => 'mtime',
+      }
+    }
+
+    $rules.each |String $key, Hash $rule| {
+      simp_firewalld::rule { $key:
+        * => $rule,
       }
     }
   }

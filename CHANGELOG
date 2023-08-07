@@ -1,3 +1,6 @@
+* Mon Aug 07 2023 Mike Riddle <mike@sicura.us> - 0.4.1
+- Allow the simp_firewalld class to take in rules via hieradata
+
 * Mon Jun 12 2023 Chris Tessmer <chris.tessmer@onyxpoint.com> - 0.4.0
 - Add RockyLinux 8 support
 

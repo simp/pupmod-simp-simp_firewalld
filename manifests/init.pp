@@ -80,7 +80,6 @@
 #
 # @param package_ensure
 #   The 'ensure' value for package resources
-#
 class simp_firewalld (
   Optional[Hash]                                       $rules,               # data in module
   Enum['iptables','nftables']                          $firewall_backend,    # data in module

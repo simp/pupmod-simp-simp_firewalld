@@ -21,8 +21,6 @@
 # @param firewall_backend
 #   Allows you to set the backend that firewalld will use.
 #
-#   * Currently set to 'iptables' due to bugs in nftables
-#
 # @param enable
 #   Activate the firewalld management capabilties.
 #
@@ -81,7 +79,7 @@
 # @param package_ensure
 #   The 'ensure' value for package resources
 class simp_firewalld (
-  Optional[Hash]                                       $rules,               # data in module
+  Hash                                                 $rules,               # data in module
   Enum['iptables','nftables']                          $firewall_backend,    # data in module
   Boolean                                              $enable               = 'firewalld' in pick($facts['simplib__firewalls'], 'none'),
   Boolean                                              $complete_reload      = false,

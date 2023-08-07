@@ -68,7 +68,7 @@ The following parameters are available in the `simp_firewalld` class:
 
 ##### <a name="-simp_firewalld--rules"></a>`rules`
 
-Data type: `Optional[Hash]`
+Data type: `Hash`
 
 A hash of firewalld::rules that should be created
 
@@ -77,8 +77,6 @@ A hash of firewalld::rules that should be created
 Data type: `Enum['iptables','nftables']`
 
 Allows you to set the backend that firewalld will use.
-
-* Currently set to 'iptables' due to bugs in nftables
 
 ##### <a name="-simp_firewalld--enable"></a>`enable`
 

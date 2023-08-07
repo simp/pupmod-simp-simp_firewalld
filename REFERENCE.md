@@ -25,16 +25,39 @@
 If you want to override any element not present in the `firewalld` class
 resource below then you should use Hiera directly on the `firewalld` class.
 
+#### Examples
+
+##### creating a new rule via class declaration:
+
+```puppet
+simp_firewalld::rules => {
+  'allow_port_22' => {
+    'protocol' => 'tcp',
+    'dports'   => 22,
+  }
+}
+```
+
+##### same example, but with hieradata
+
+```puppet
+simp_firewalld::rules:
+  allow_port_22:
+    protocol: tcp
+    dports: 22
+```
+
 #### Parameters
 
 The following parameters are available in the `simp_firewalld` class:
 
+* [`rules`](#-simp_firewalld--rules)
+* [`firewall_backend`](#-simp_firewalld--firewall_backend)
 * [`enable`](#-simp_firewalld--enable)
 * [`complete_reload`](#-simp_firewalld--complete_reload)
 * [`lockdown`](#-simp_firewalld--lockdown)
 * [`default_zone`](#-simp_firewalld--default_zone)
 * [`log_denied`](#-simp_firewalld--log_denied)
-* [`firewall_backend`](#-simp_firewalld--firewall_backend)
 * [`enable_tidy`](#-simp_firewalld--enable_tidy)
 * [`tidy_dirs`](#-simp_firewalld--tidy_dirs)
 * [`tidy_prefix`](#-simp_firewalld--tidy_prefix)
@@ -42,6 +65,18 @@ The following parameters are available in the `simp_firewalld` class:
 * [`simp_zone_interfaces`](#-simp_firewalld--simp_zone_interfaces)
 * [`simp_zone_target`](#-simp_firewalld--simp_zone_target)
 * [`package_ensure`](#-simp_firewalld--package_ensure)
+
+##### <a name="-simp_firewalld--rules"></a>`rules`
+
+Data type: `Hash`
+
+A hash of firewalld::rules that should be created
+
+##### <a name="-simp_firewalld--firewall_backend"></a>`firewall_backend`
+
+Data type: `Enum['iptables','nftables']`
+
+Allows you to set the backend that firewalld will use.
 
 ##### <a name="-simp_firewalld--enable"></a>`enable`
 
@@ -103,14 +138,6 @@ What types of logs to process for denied packets.
 @see LogDenied in firewalld.conf(5)
 
 Default value: `'unicast'`
-
-##### <a name="-simp_firewalld--firewall_backend"></a>`firewall_backend`
-
-Data type: `Enum['iptables','nftables']`
-
-Allows you to set the backend that firewalld will use.
-
-* Currently set to 'iptables' due to bugs in nftables
 
 ##### <a name="-simp_firewalld--enable_tidy"></a>`enable_tidy`
 

@@ -1,2 +1,3 @@
 ---
 simp_firewalld::firewall_backend: 'nftables'
+simp_firewalld::rules: {}

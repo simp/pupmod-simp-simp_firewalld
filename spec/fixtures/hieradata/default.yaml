@@ -1,5 +1,6 @@
 ---
 # SIMP infrastructure settings
+simp_firewalld::rules: {}
 simp_options::trusted_nets:   ['192.168.122.0/24']
 
 compliance_markup::validate_profiles:

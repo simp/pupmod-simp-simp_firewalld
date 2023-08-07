@@ -56,6 +56,28 @@ describe 'simp_firewalld' do
             .with_package_ensure('installed')
           }
         end
+
+        context 'adding port 22 rule' do
+          let(:facts) do
+            os_facts.merge({
+              :simplib__firewalls => ['iptables', 'firewalld', 'nft']
+            })
+          end
+          let(:params) {{
+            :firewall_backend => 'nftables',
+            :rules            => {
+              'add_port_22' => {
+                'protocol' => 'tcp',
+                'dports'   => 22,
+              },
+            },
+          }}
+
+          it { is_expected.to create_simp_firewalld__rule('add_port_22')
+            .with_protocol('tcp')
+            .with_dports('22')
+          }
+        end
       end
     end
   end

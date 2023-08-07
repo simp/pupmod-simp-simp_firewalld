@@ -118,6 +118,25 @@ simp_firewalld::rule { 'allow_tcp_range':
 
 ### Allowing full access from a specific node
 
+#### Using simp_firewalld::rules:
+```puppet
+simp_firewalld::rules => {
+  'allow_all_to_central_management' => {
+    'trusted_nets' => ['10.10.35.100'],
+    'protocol'     => 'all',
+  }
+}
+```
+
+#### Using simp_firewalld::rules via hieradata:
+```yaml
+simp_firewalld::rules:
+  allow_all_to_central_management:
+    trusted_nets:
+      - '10.10.35.100'
+    protocol: 'all'
+```
+#### Using simp_firewalld::rule directly:
 ```puppet
 simp_firewalld::rule { 'allow_all_to_central_management':
   trusted_nets => ['10.10.35.100'],

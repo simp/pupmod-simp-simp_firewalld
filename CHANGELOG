@@ -1,3 +1,6 @@
+* Mon Aug 14 2023 Mike Riddle <mike@sicura.us> - 0.4.2
+- Moved the common.yaml to the top level data directory so it will actually be read
+
 * Mon Aug 07 2023 Mike Riddle <mike@sicura.us> - 0.4.1
 - Allow the simp_firewalld class to take in rules via hieradata
 

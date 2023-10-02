@@ -1,6 +1,6 @@
 {
   "name": "simp-simp_firewalld",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "SIMP Team",
   "summary": "SIMP-oriented firewalld management",
   "license": "Apache-2.0",
@@ -15,11 +15,11 @@
   "dependencies": [
     {
       "name": "puppet/firewalld",
-      "version_requirement": ">= 4.2.3 < 5.0.0"
+      "version_requirement": ">= 4.2.3 < 6.0.0"
     },
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 8.0.0 < 9.0.0"
+      "version_requirement": ">= 8.0.0 < 10.0.0"
     },
     {
       "name": "simp/simplib",
@@ -70,7 +70,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 6.22.1 < 8.0.0"
+      "version_requirement": ">= 7.0.0 < 9.0.0"
     }
   ]
 }

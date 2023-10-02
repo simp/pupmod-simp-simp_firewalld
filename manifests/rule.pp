@@ -103,10 +103,10 @@ define simp_firewalld::rule (
           }
         }
 
-        firewalld::custom_service { "${_prefix}${_safe_name}":
+        firewalld_custom_service { "${_prefix}${_safe_name}":
           short       => "${_prefix}${name}",
           description => "SIMP ${name}",
-          port        => $_dports,
+          ports       => $_dports,
           require     => Service['firewalld'],
         }
       }

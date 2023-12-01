@@ -1,3 +1,9 @@
+* Thu Nov 30 2023 Sean Peterson <________@gmail.com> - 0.9.0
+- Add $simp_zone_masquerade parameter
+
+* Mon Oct 23 2023 Steven Pritchard <steve@sicura.us> - 0.8.0
+- [puppetsync] Add EL9 support
+
 * Mon Oct 23 2023 Steven Pritchard <steve@sicura.us> - 0.8.0
 - [puppetsync] Add EL9 support
 

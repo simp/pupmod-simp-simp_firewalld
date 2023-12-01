@@ -64,6 +64,7 @@ The following parameters are available in the `simp_firewalld` class:
 * [`tidy_minutes`](#-simp_firewalld--tidy_minutes)
 * [`simp_zone_interfaces`](#-simp_firewalld--simp_zone_interfaces)
 * [`simp_zone_target`](#-simp_firewalld--simp_zone_target)
+* [`simp_zone_masquerade`](#-simp_firewalld--simp_zone_masquerade)
 * [`package_ensure`](#-simp_firewalld--package_ensure)
 
 ##### <a name="-simp_firewalld--rules"></a>`rules`
@@ -195,6 +196,14 @@ Data type: `Enum['default', 'ACCEPT', 'REJECT', 'DROP']`
 The default target for the 99_simp zone
 
 Default value: `'DROP'`
+
+##### <a name="-simp_firewalld--simp_zone_masquerade"></a>`simp_zone_masquerade`
+
+Data type: `Boolean`
+
+Whether to add or remove masquerading from the 99_simp zone
+
+Default value: `false`
 
 ##### <a name="-simp_firewalld--package_ensure"></a>`package_ensure`
 

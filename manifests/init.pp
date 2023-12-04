@@ -76,6 +76,9 @@
 # @param simp_zone_target
 #   The default target for the 99_simp zone
 #
+# @param simp_zone_masquerade
+#   Whether to add or remove masquerading from the 99_simp zone
+#
 # @param package_ensure
 #   The 'ensure' value for package resources
 class simp_firewalld (
@@ -98,6 +101,7 @@ class simp_firewalld (
   Integer[1]                                           $tidy_minutes         = 10,
   Array[Optional[String[1]]]                           $simp_zone_interfaces = [],
   Enum['default', 'ACCEPT', 'REJECT', 'DROP']          $simp_zone_target     = 'DROP',
+  Boolean                                              $simp_zone_masquerade = false,
   String[1]                                            $package_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
 ) {
   if $enable {
@@ -136,6 +140,7 @@ class simp_firewalld (
       purge_ports      => true,
       interfaces       => $simp_zone_interfaces,
       target           => $simp_zone_target,
+      masquerade       => $simp_zone_masquerade,
       require          => Service['firewalld'],
     }
 

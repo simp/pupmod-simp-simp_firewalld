@@ -91,8 +91,8 @@
 # @param package_ensure
 #   The 'ensure' value for package resources
 class simp_firewalld (
-  Hash                                                 $rules,               # data in module
-  Enum['iptables','nftables']                          $firewall_backend,    # data in module
+  Hash                                                 $rules,                     # data in module
+  Enum['iptables','nftables']                          $firewall_backend,          # data in module
   Boolean                                              $enable                     = 'firewalld' in pick($facts['simplib__firewalls'], 'none'),
   Boolean                                              $complete_reload            = false,
   Boolean                                              $lockdown                   = true,

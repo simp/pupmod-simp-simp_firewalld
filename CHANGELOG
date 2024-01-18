@@ -1,3 +1,6 @@
+* Thu Jan 18 2024 Mike Riddle <mike@sicura.us> - 0.10.0
+- Made the 99_simp zone purge parameters toggle-able
+
 * Thu Nov 30 2023 Sean Peterson <________@gmail.com> - 0.9.0
 - Add $simp_zone_masquerade parameter
 

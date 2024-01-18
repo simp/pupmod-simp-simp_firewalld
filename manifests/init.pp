@@ -70,6 +70,15 @@
 #   Number of **minutes** to consider a configuration file 'stale' for the
 #   purposes of tidying.
 #
+# @param simp_zone_purge_rich_rules
+#   If true, any unmanaged rich rules will be removed from the zone
+#
+# @param simp_zone_purge_services
+#   If true, any unmanaged services will be removed from the zone
+#
+# @param simp_zone_purge_ports
+#   If true, any unmanaged ports will be removed from the zone
+#
 # @param simp_zone_interfaces
 #   The network interfaces to which the underlying 99_simp zone should apply
 #
@@ -82,27 +91,30 @@
 # @param package_ensure
 #   The 'ensure' value for package resources
 class simp_firewalld (
-  Hash                                                 $rules,               # data in module
-  Enum['iptables','nftables']                          $firewall_backend,    # data in module
-  Boolean                                              $enable               = 'firewalld' in pick($facts['simplib__firewalls'], 'none'),
-  Boolean                                              $complete_reload      = false,
-  Boolean                                              $lockdown             = true,
-  String[1]                                            $default_zone         = '99_simp',
-  Enum['off', 'all','unicast','broadcast','multicast'] $log_denied           = 'unicast',
-  Boolean                                              $enable_tidy          = true,
+  Hash                                                 $rules,                     # data in module
+  Enum['iptables','nftables']                          $firewall_backend,          # data in module
+  Boolean                                              $enable                     = 'firewalld' in pick($facts['simplib__firewalls'], 'none'),
+  Boolean                                              $complete_reload            = false,
+  Boolean                                              $lockdown                   = true,
+  String[1]                                            $default_zone               = '99_simp',
+  Enum['off', 'all','unicast','broadcast','multicast'] $log_denied                 = 'unicast',
+  Boolean                                              $enable_tidy                = true,
   # lint:ignore:2sp_soft_tabs
-  Array[Stdlib::Absolutepath]                          $tidy_dirs            = [
-                                                                                 '/etc/firewalld/icmptypes',
-                                                                                 '/etc/firewalld/ipsets',
-                                                                                 '/etc/firewalld/services',
-                                                                               ],
+  Array[Stdlib::Absolutepath]                          $tidy_dirs                  = [
+                                                                                      '/etc/firewalld/icmptypes',
+                                                                                      '/etc/firewalld/ipsets',
+                                                                                      '/etc/firewalld/services',
+                                                                                    ],
   # lint:endignore
-  String[1]                                            $tidy_prefix          = 'simp_',
-  Integer[1]                                           $tidy_minutes         = 10,
-  Array[Optional[String[1]]]                           $simp_zone_interfaces = [],
-  Enum['default', 'ACCEPT', 'REJECT', 'DROP']          $simp_zone_target     = 'DROP',
-  Boolean                                              $simp_zone_masquerade = false,
-  String[1]                                            $package_ensure       = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
+  String[1]                                            $tidy_prefix                = 'simp_',
+  Integer[1]                                           $tidy_minutes               = 10,
+  Boolean                                              $simp_zone_purge_rich_rules = true,
+  Boolean                                              $simp_zone_purge_services   = true,
+  Boolean                                              $simp_zone_purge_ports      = true,
+  Array[Optional[String[1]]]                           $simp_zone_interfaces       = [],
+  Enum['default', 'ACCEPT', 'REJECT', 'DROP']          $simp_zone_target           = 'DROP',
+  Boolean                                              $simp_zone_masquerade       = false,
+  String[1]                                            $package_ensure             = simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' }),
 ) {
   if $enable {
     Exec { path => '/usr/bin:/bin' }
@@ -135,9 +147,9 @@ class simp_firewalld (
 
     firewalld_zone { '99_simp':
       ensure           => 'present',
-      purge_rich_rules => true,
-      purge_services   => true,
-      purge_ports      => true,
+      purge_rich_rules => $simp_zone_purge_rich_rules,
+      purge_services   => $simp_zone_purge_services,
+      purge_ports      => $simp_zone_purge_ports,
       interfaces       => $simp_zone_interfaces,
       target           => $simp_zone_target,
       masquerade       => $simp_zone_masquerade,

@@ -62,6 +62,9 @@ The following parameters are available in the `simp_firewalld` class:
 * [`tidy_dirs`](#-simp_firewalld--tidy_dirs)
 * [`tidy_prefix`](#-simp_firewalld--tidy_prefix)
 * [`tidy_minutes`](#-simp_firewalld--tidy_minutes)
+* [`simp_zone_purge_rich_rules`](#-simp_firewalld--simp_zone_purge_rich_rules)
+* [`simp_zone_purge_services`](#-simp_firewalld--simp_zone_purge_services)
+* [`simp_zone_purge_ports`](#-simp_firewalld--simp_zone_purge_ports)
 * [`simp_zone_interfaces`](#-simp_firewalld--simp_zone_interfaces)
 * [`simp_zone_target`](#-simp_firewalld--simp_zone_target)
 * [`simp_zone_masquerade`](#-simp_firewalld--simp_zone_masquerade)
@@ -158,10 +161,10 @@ Default value:
 
 ```puppet
 [
-                                                                                 '/etc/firewalld/icmptypes',
-                                                                                 '/etc/firewalld/ipsets',
-                                                                                 '/etc/firewalld/services',
-                                                                               ]
+                                                                                      '/etc/firewalld/icmptypes',
+                                                                                      '/etc/firewalld/ipsets',
+                                                                                      '/etc/firewalld/services',
+                                                                                    ]
 ```
 
 ##### <a name="-simp_firewalld--tidy_prefix"></a>`tidy_prefix`
@@ -180,6 +183,30 @@ Number of **minutes** to consider a configuration file 'stale' for the
 purposes of tidying.
 
 Default value: `10`
+
+##### <a name="-simp_firewalld--simp_zone_purge_rich_rules"></a>`simp_zone_purge_rich_rules`
+
+Data type: `Boolean`
+
+If true, any unmanaged rich rules will be removed from the zone
+
+Default value: `true`
+
+##### <a name="-simp_firewalld--simp_zone_purge_services"></a>`simp_zone_purge_services`
+
+Data type: `Boolean`
+
+If true, any unmanaged services will be removed from the zone
+
+Default value: `true`
+
+##### <a name="-simp_firewalld--simp_zone_purge_ports"></a>`simp_zone_purge_ports`
+
+Data type: `Boolean`
+
+If true, any unmanaged ports will be removed from the zone
+
+Default value: `true`
 
 ##### <a name="-simp_firewalld--simp_zone_interfaces"></a>`simp_zone_interfaces`
 

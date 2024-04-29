@@ -39,11 +39,11 @@ describe "simp_firewalld::rule", :type => :define do
           it { is_expected.to create_simp_firewalld__rule(title).with_dports(params[:dports]) }
 
           it {
-            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-sLxKcJ8Jr7GgDOF54KlBvQR2Yc").with(
+            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-CmxLn8c8yuIQ2VyzgvzR4yi8TS").with(
               {
                 :ensure  => 'present',
                 :family  => 'ipv4',
-                :source  => { 'ipset' => 'simp-sLxKcJ8Jr7GgDOF54KlBvQR2Yc' },
+                :source  => { 'ipset' => 'simp-CmxLn8c8yuIQ2VyzgvzR4yi8TS' },
                 :service => "simp_#{title}",
                 :action  => 'accept',
                 :zone    => '99_simp'
@@ -52,11 +52,11 @@ describe "simp_firewalld::rule", :type => :define do
           }
 
           it {
-            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-l7zVcqWPK6oo3saymLCPHgjuhp").with(
+            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-07jxibAQvZRtfJna9ZG6dLvz2e").with(
               {
                 :ensure  => 'present',
                 :family  => 'ipv6',
-                :source  => {'ipset' => 'simp-l7zVcqWPK6oo3saymLCPHgjuhp'},
+                :source  => {'ipset' => 'simp-07jxibAQvZRtfJna9ZG6dLvz2e'},
                 :service => "simp_#{title}",
                 :action  => 'accept',
                 :zone    => '99_simp'

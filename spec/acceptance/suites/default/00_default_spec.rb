@@ -69,8 +69,8 @@ hosts.each do |host|
 
         expect(target_ruleset.size).to eq(2)
 
-        hash_ip_ipset = 'simp-gEi0qMBFhbv6eiaWYmkwap62GS'
-        hash_net_ipset = 'simp-j07oVIg3S8ccSfyQGfBvCdqsCv'
+        hash_ip_ipset = 'simp-P2bfsoqkagK6KYomH5dgJFNq6i'
+        hash_net_ipset = 'simp-tn9HkuMIqysMB38yE39eTr1BDA'
 
         expect(target_ruleset).to include(match(%r{ipset="#{hash_ip_ipset}"}))
         expect(target_ruleset).to include(match(%r{ipset="#{hash_net_ipset}"}))
@@ -132,8 +132,8 @@ hosts.each do |host|
 
           expect(target_ruleset.size).to eq(2)
 
-          hash_ip_ipset = 'simp-BahW5mYEj6huIkJdFkE4gS68zH'
-          hash_net_ipset = 'simp-ijfIJaYoC8b8MC3CPSwRFKY6h9'
+          hash_ip_ipset = 'simp-O9NSV0JsGTTti0eoSoRle4FzWr'
+          hash_net_ipset = 'simp-c53N50IHUI62MAHDArAdokw4kI'
 
           expect(target_ruleset).to include(match(%r{ipset="#{hash_ip_ipset}"}))
           expect(target_ruleset).to include(match(%r{ipset="#{hash_net_ipset}"}))

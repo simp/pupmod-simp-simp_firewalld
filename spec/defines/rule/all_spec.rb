@@ -76,10 +76,10 @@ describe "simp_firewalld::rule", :type => :define do
 
             it { is_expected.not_to create_firewalld__custom_service("simp_all_#{title}") }
             it { is_expected.not_to create_firewalld_service("simp_all_#{title}") }
-            it { is_expected.not_to create_firewalld_ipset('simp-YBi8gcbxcIq0JuB3tmmajXBuPA') }
-            it { is_expected.not_to create_firewalld_ipset('simp-Z4NZ2BaANQcFilLyb0EOS098rm') }
+            it { is_expected.not_to create_firewalld_ipset('simp-JLn9X7BmpTacRGDKNCKSeIJhbZ') }
+            it { is_expected.not_to create_firewalld_ipset('simp-siFVMk3fjxaKSgTnYmVONaUP7g') }
             it {
-              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-YBi8gcbxcIq0JuB3tmmajXBuPA").with(
+              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ").with(
                 {
                   :ensure  => 'present',
                   :family  => 'ipv4',
@@ -92,7 +92,7 @@ describe "simp_firewalld::rule", :type => :define do
               )
             }
             it {
-              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-Z4NZ2BaANQcFilLyb0EOS098rm").with(
+              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g").with(
                 {
                   :ensure  => 'present',
                   :family  => 'ipv6',
@@ -116,7 +116,7 @@ describe "simp_firewalld::rule", :type => :define do
             }}
 
             it {
-              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-YBi8gcbxcIq0JuB3tmmajXBuPA").with(
+              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ").with(
                 {
                   :ensure  => 'present',
                   :family  => 'ipv4',
@@ -129,7 +129,7 @@ describe "simp_firewalld::rule", :type => :define do
               )
             }
 
-            it { is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-Z4NZ2BaANQcFilLyb0EOS098rm") }
+            it { is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g") }
           end
 
           context 'IPv6 only' do
@@ -142,7 +142,7 @@ describe "simp_firewalld::rule", :type => :define do
             }}
 
             it {
-              is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-Z4NZ2BaANQcFilLyb0EOS098rm").with(
+              is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g").with(
                 {
                   :ensure  => 'present',
                   :family  => 'ipv6',
@@ -155,7 +155,7 @@ describe "simp_firewalld::rule", :type => :define do
               )
             }
 
-            it { is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-YBi8gcbxcIq0JuB3tmmajXBuPA") }
+            it { is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ") }
           end
 
           context 'IPv4 mismatched application' do

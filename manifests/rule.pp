@@ -208,7 +208,7 @@ define simp_firewalld::rule (
                   'simp',
                   seeded_rand_string(
                     26,
-                    join([$_ipset_family, $_ipset_type] + sort(unique($_trusted_nets)),'')
+                    join([$_ipset_family, $_ipset_type] + sort(unique($_trusted_nets)) + $_ipset_entries,'')
                   )
                 ], '-')[0,31]
 

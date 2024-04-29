@@ -1,3 +1,6 @@
+* Mon Apr 29 2024 Steven Pritchard <steve@sicura.us> - 0.10.1
+- Prevent duplicate declaration in `firewalld_ipset` (#49)
+
 * Thu Jan 18 2024 Mike Riddle <mike@sicura.us> - 0.10.0
 - Made the 99_simp zone purge parameters toggle-able
 

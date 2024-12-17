@@ -4,9 +4,7 @@ describe 'simp_firewalld' do
   context 'supported operating systems' do
     on_supported_os.each do |os, os_facts|
       let(:facts) do
-        os_facts.merge({
-                         simplib__firewalls: ['iptables', 'firewalld']
-                       })
+        os_facts.merge(simplib__firewalls: ['iptables', 'firewalld'])
       end
 
       context "on #{os}" do
@@ -32,7 +30,7 @@ describe 'simp_firewalld' do
                 purge_ports: true,
                 interfaces: [],
                 target: 'DROP',
-                require: 'Service[firewalld]'
+                require: 'Service[firewalld]',
               },
             )
           }
@@ -42,13 +40,11 @@ describe 'simp_firewalld' do
 
         context 'with nftables' do
           let(:facts) do
-            os_facts.merge({
-                             simplib__firewalls: ['iptables', 'firewalld', 'nft']
-                           })
+            os_facts.merge(simplib__firewalls: ['iptables', 'firewalld', 'nft'])
           end
           let(:params) do
             {
-              firewall_backend: 'nftables'
+              firewall_backend: 'nftables',
             }
           end
 
@@ -64,19 +60,17 @@ describe 'simp_firewalld' do
 
         context 'adding port 22 rule' do
           let(:facts) do
-            os_facts.merge({
-                             simplib__firewalls: ['iptables', 'firewalld', 'nft']
-                           })
+            os_facts.merge(simplib__firewalls: ['iptables', 'firewalld', 'nft'])
           end
           let(:params) do
             {
               firewall_backend: 'nftables',
-           rules: {
-             'add_port_22' => {
-               'protocol' => 'tcp',
-               'dports'   => 22,
-             },
-           },
+              rules: {
+                'add_port_22' => {
+                  'protocol' => 'tcp',
+                  'dports'   => 22,
+                },
+              },
             }
           end
 

@@ -15,9 +15,7 @@ describe 'simp_firewalld::rule', type: :define do
     on_supported_os.each do |os, os_facts|
       context "on #{os}" do
         let(:facts) do
-          os_facts.merge({
-                           simplib__firewalls: ['iptables', 'firewalld']
-                         })
+          os_facts.merge(simplib__firewalls: ['iptables', 'firewalld'])
         end
 
         let(:ipv4_nets) do
@@ -51,20 +49,19 @@ describe 'simp_firewalld::rule', type: :define do
           let(:params) do
             {
               protocol: 'all',
-            trusted_nets: ipv4_nets + hostnames + ipv6_nets
+              trusted_nets: ipv4_nets + hostnames + ipv6_nets,
             }
           end
 
           it { is_expected.to compile.with_all_deps }
-          it {
-            is_expected.to create_notify("simp_firewalld::rule[#{title}] - hostname warning").with(
-              {
+          it do
+            is_expected.to create_notify("simp_firewalld::rule[#{title}] - hostname warning")
+              .with(
                 message: %r{foo\.bar\.baz, i\.like\.cheese},
                 withpath: true,
-                loglevel: 'warning'
-              },
-            )
-          }
+                loglevel: 'warning',
+              )
+          end
         end
 
         context "with '0.0.0.0/0' in the address list" do
@@ -74,7 +71,7 @@ describe 'simp_firewalld::rule', type: :define do
             let(:params) do
               {
                 protocol: 'all',
-              trusted_nets: ipv4_nets + ['0.0.0.0/0']
+                trusted_nets: ipv4_nets + ['0.0.0.0/0'],
               }
             end
 
@@ -84,32 +81,30 @@ describe 'simp_firewalld::rule', type: :define do
             it { is_expected.not_to create_firewalld_service("simp_all_#{title}") }
             it { is_expected.not_to create_firewalld_ipset('simp-JLn9X7BmpTacRGDKNCKSeIJhbZ') }
             it { is_expected.not_to create_firewalld_ipset('simp-siFVMk3fjxaKSgTnYmVONaUP7g') }
-            it {
-              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ").with(
-                {
+            it do
+              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ")
+                .with(
                   ensure: 'present',
                   family: 'ipv4',
                   source: '0.0.0.0/0',
                   service: nil,
                   action: 'accept',
                   zone: '99_simp',
-                  require: 'Service[firewalld]'
-                },
-              )
-            }
-            it {
-              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g").with(
-                {
+                  require: 'Service[firewalld]',
+                )
+            end
+            it do
+              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g")
+                .with(
                   ensure: 'present',
                   family: 'ipv6',
                   source: '::/0',
                   service: nil,
                   action: 'accept',
                   zone: '99_simp',
-                  require: 'Service[firewalld]'
-                },
-              )
-            }
+                  require: 'Service[firewalld]',
+                )
+            end
           end
 
           context 'IPv4 only' do
@@ -118,24 +113,23 @@ describe 'simp_firewalld::rule', type: :define do
             let(:params) do
               {
                 protocol: 'all',
-              trusted_nets: ipv4_nets + ['0.0.0.0/0'],
-              apply_to: 'ipv4'
+                trusted_nets: ipv4_nets + ['0.0.0.0/0'],
+                apply_to: 'ipv4',
               }
             end
 
-            it {
-              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ").with(
-                {
+            it do
+              is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ")
+                .with(
                   ensure: 'present',
                   family: 'ipv4',
                   source: '0.0.0.0/0',
                   service: nil,
                   action: 'accept',
                   zone: '99_simp',
-                  require: 'Service[firewalld]'
-                },
-              )
-            }
+                  require: 'Service[firewalld]',
+                )
+            end
 
             it { is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g") }
           end
@@ -146,24 +140,23 @@ describe 'simp_firewalld::rule', type: :define do
             let(:params) do
               {
                 protocol: 'all',
-              trusted_nets: ipv4_nets + ['::/0'],
-              apply_to: 'ipv6'
+                trusted_nets: ipv4_nets + ['::/0'],
+                apply_to: 'ipv6',
               }
             end
 
-            it {
-              is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g").with(
-                {
+            it do
+              is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-siFVMk3fjxaKSgTnYmVONaUP7g")
+                .with(
                   ensure: 'present',
                   family: 'ipv6',
                   source: '[::]/0',
                   service: nil,
                   action: 'accept',
                   zone: 'simp',
-                  require: 'Service[firewalld]'
-                },
-              )
-            }
+                  require: 'Service[firewalld]',
+                )
+            end
 
             it { is_expected.not_to create_firewalld_rich_rule("simp_11_#{title}_simp-JLn9X7BmpTacRGDKNCKSeIJhbZ") }
           end
@@ -174,8 +167,8 @@ describe 'simp_firewalld::rule', type: :define do
             let(:params) do
               {
                 protocol: 'all',
-              trusted_nets: ipv4_nets,
-              apply_to: 'ipv6'
+                trusted_nets: ipv4_nets,
+                apply_to: 'ipv6',
               }
             end
 
@@ -190,8 +183,8 @@ describe 'simp_firewalld::rule', type: :define do
             let(:params) do
               {
                 protocol: 'all',
-              trusted_nets: ipv6_nets,
-              apply_to: 'ipv4'
+                trusted_nets: ipv6_nets,
+                apply_to: 'ipv4',
               }
             end
 

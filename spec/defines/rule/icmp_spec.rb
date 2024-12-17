@@ -5,9 +5,7 @@ describe 'simp_firewalld::rule', type: :define do
     on_supported_os.each do |os, os_facts|
       context "on #{os}" do
         let(:facts) do
-          os_facts.merge({
-                           simplib__firewalls: ['iptables', 'firewalld']
-                         })
+          os_facts.merge(simplib__firewalls: ['iptables', 'firewalld'])
         end
 
         let(:ipv4_nets) do
@@ -33,38 +31,36 @@ describe 'simp_firewalld::rule', type: :define do
           let(:params) do
             {
               protocol: 'icmp',
-           icmp_blocks: '8',
-           trusted_nets: ipv4_nets + ipv6_nets
+              icmp_blocks: '8',
+              trusted_nets: ipv4_nets + ipv6_nets,
             }
           end
 
           it { is_expected.to create_simp_firewalld__rule(title) }
 
-          it {
-            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-CmxLn8c8yuIQ2VyzgvzR4yi8TS").with(
-              {
+          it do
+            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-CmxLn8c8yuIQ2VyzgvzR4yi8TS")
+              .with(
                 ensure: 'present',
                 family: 'ipv4',
                 icmp_block: ['8'],
                 source: { 'ipset' => 'simp-CmxLn8c8yuIQ2VyzgvzR4yi8TS' },
                 action: 'accept',
-                zone: '99_simp'
-              },
-            )
-          }
+                zone: '99_simp',
+              )
+          end
 
-          it {
-            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-07jxibAQvZRtfJna9ZG6dLvz2e").with(
-              {
+          it do
+            is_expected.to create_firewalld_rich_rule("simp_11_#{title}_simp-07jxibAQvZRtfJna9ZG6dLvz2e")
+              .with(
                 ensure: 'present',
                 family: 'ipv6',
                 icmp_block: ['8'],
                 source: { 'ipset' => 'simp-07jxibAQvZRtfJna9ZG6dLvz2e' },
                 action: 'accept',
-                zone: '99_simp'
-              },
-            )
-          }
+                zone: '99_simp',
+              )
+          end
         end
       end
     end

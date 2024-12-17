@@ -5,7 +5,7 @@ test_name 'simp_firewalld'
 hosts.each do |host|
   describe "simp_firewalld on #{host}" do
     let(:default_manifest) do
-      <<-EOS
+      <<~EOS
         class { 'simp_firewalld': enable => true }
 
         simp_firewalld::rule { 'allow_all_ssh':
@@ -38,7 +38,7 @@ hosts.each do |host|
 
     context 'TCP listen' do
       let(:manifest) do
-        <<-EOM
+        <<~EOM
           #{default_manifest}
 
           simp_firewalld::rule { 'allow_tcp_listen':
@@ -101,7 +101,7 @@ hosts.each do |host|
 
       context 'UDP listen' do
         let(:manifest) do
-          <<-EOM
+          <<~EOM
             #{default_manifest}
 
             simp_firewalld::rule { 'allow_udp_listen':

@@ -1,17 +1,15 @@
 ---
 HOSTS:
-  el10:
-    roles:
-    - default
+  oel10:
     platform: el-10-x86_64
     hypervisor: docker
-    image: almalinux:10
+    image: oraclelinux:10
     docker_cmd: '/usr/sbin/init'
     docker_preserve_image: true
     docker_image_commands:
       # Puppet Deps
       - 'yum install -y rsync openssl openssh-server'
 CONFIG:
-  type: aio
   log_level: verbose
-  puppet_collection: "<%= ENV.fetch('BEAKER_PUPPET_COLLECTION', 'openvox8') %>"
+  type: aio
+  puppet_collection: <%= ENV.fetch('BEAKER_PUPPET_COLLECTION', 'openvox8') %>

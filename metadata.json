@@ -1,6 +1,6 @@
 {
   "name": "simp-simp_firewalld",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "SIMP Team",
   "summary": "SIMP-oriented firewalld management",
   "license": "Apache-2.0",
@@ -53,14 +53,16 @@
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
       "operatingsystem": "Rocky",
       "operatingsystemrelease": [
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {

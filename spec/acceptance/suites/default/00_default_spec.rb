@@ -84,8 +84,8 @@ hosts.each do |host|
         hash_ip_ipset_contents = Hash[hash_ip_ipset_contents.map { |x| x.strip.split(': ') }]
         hash_ip_ipset_contents['entries'] = hash_ip_ipset_contents['entries'].split(%r{\s+})
 
-        expect(hash_ip_ipset_contents['entries']).to include(match(%r{3\.4\.5\.6}))
-        expect(hash_ip_ipset_contents['entries']).to include(match(%r{5\.6\.7\.8}))
+        expect(hash_ip_ipset_contents['entries']).to include(include('3.4.5.6'))
+        expect(hash_ip_ipset_contents['entries']).to include(include('5.6.7.8'))
 
         hash_net_ipset_contents = on(host, "firewall-cmd --info-ipset=#{hash_net_ipset}").output
 
@@ -96,7 +96,7 @@ hosts.each do |host|
         hash_net_ipset_contents = Hash[hash_net_ipset_contents.map { |x| x.strip.split(': ') }]
         hash_net_ipset_contents['entries'] = hash_net_ipset_contents['entries'].split(%r{\s+})
 
-        expect(hash_net_ipset_contents['entries']).to include(match(%r{1\.2\.3\.0/24}))
+        expect(hash_net_ipset_contents['entries']).to include(include('1.2.3.0/24'))
       end
 
       context 'UDP listen' do
@@ -147,8 +147,8 @@ hosts.each do |host|
           hash_ip_ipset_contents = Hash[hash_ip_ipset_contents.map { |x| x.strip.split(': ') }]
           hash_ip_ipset_contents['entries'] = hash_ip_ipset_contents['entries'].split(%r{\s+})
 
-          expect(hash_ip_ipset_contents['entries']).to include(match(%r{3\.4\.5\.6}))
-          expect(hash_ip_ipset_contents['entries']).to include(match(%r{5\.6\.7\.8}))
+          expect(hash_ip_ipset_contents['entries']).to include(include('3.4.5.6'))
+          expect(hash_ip_ipset_contents['entries']).to include(include('5.6.7.8'))
 
           hash_net_ipset_contents = on(host, "firewall-cmd --info-ipset=#{hash_net_ipset}").output
 
@@ -159,7 +159,7 @@ hosts.each do |host|
           hash_net_ipset_contents = Hash[hash_net_ipset_contents.map { |x| x.strip.split(': ') }]
           hash_net_ipset_contents['entries'] = hash_net_ipset_contents['entries'].split(%r{\s+})
 
-          expect(hash_net_ipset_contents['entries']).to include(match(%r{2\.0\.0\.0/8}))
+          expect(hash_net_ipset_contents['entries']).to include(include('2.0.0.0/8'))
         end
       end
     end

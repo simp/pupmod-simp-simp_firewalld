@@ -15,7 +15,7 @@ ipsets.
 The design intent is that SIMP owns a single, high-priority zone (`99_simp`)
 and drives everything through it, leaving the rest of the firewalld
 configuration free for other, non-interfering manipulation
-(`manifests/init.pp:45-53`).
+(`manifests/init.pp`).
 
 ### Business logic
 
@@ -23,81 +23,81 @@ The module has exactly two manifests: the `simp_firewalld` class
 (`manifests/init.pp`) and the `simp_firewalld::rule` defined type
 (`manifests/rule.pp`). Neither is `assert_private()`'d.
 
-- **`simp_firewalld` (`manifests/init.pp:93-179`)** — Public entry class.
+- **`simp_firewalld` (`manifests/init.pp`)** — Public entry class.
   Everything is gated on `$enable`; when disabled the class is effectively a
   no-op. Key parameters:
   - `$rules` (`Hash`, **no default in signature**) — supplied from module data
-    (`data/common.yaml` → `{}`, `init.pp:94`). Each entry is passed splat-style
-    to `simp_firewalld::rule` (`init.pp:173-177`).
+    (`data/common.yaml` → `{}`, `init.pp`). Each entry is passed splat-style
+    to `simp_firewalld::rule` (`init.pp`).
   - `$firewall_backend` (`Enum['iptables','nftables']`, **no default in
     signature**) — supplied from module data (`data/common.yaml` → `nftables`;
     overridden per-OS in `data/os/*.yaml`, e.g. `iptables` for Amazon and
-    RedHat-8.0/8.1, `init.pp:95`).
+    RedHat-8.0/8.1, `init.pp`).
   - `$enable` (`Boolean`) — the master switch. Defaults to whether `firewalld`
     appears in the `simplib__firewalls` fact:
-    `'firewalld' in pick($facts['simplib__firewalls'], 'none')` (`init.pp:96`).
+    `'firewalld' in pick($facts['simplib__firewalls'], 'none')` (`init.pp`).
     Set `true` explicitly in Hiera to force management even when the fact does
     not report firewalld.
   - `$complete_reload` (`Boolean`, default `false`) — when `false`, the class
     **disables** the upstream `firewall-cmd --complete-reload` exec by
-    collector-overriding it with `onlyif => '/bin/false'` (`init.pp:143-146`),
+    collector-overriding it with `onlyif => '/bin/false'` (`init.pp`),
     because a complete reload breaks all existing connections.
   - `$lockdown` (`Boolean`, default `true`) — translated to the upstream
-    module's `yes`/`no` string (`init.pp:123`) and passed to the `firewalld`
+    module's `yes`/`no` string (`init.pp`) and passed to the `firewalld`
     class.
   - `$default_zone` (`String[1]`, default `'99_simp'`) — **IMPORTANT:** if set
     to anything other than `99_simp`, this module's rules will NOT apply to the
     default zone, because the module only populates the `99_simp` zone
-    (`init.pp:45-53`).
+    (`init.pp`).
   - `$package_ensure` (`String[1]`) — defaults to
     `simplib::lookup('simp_options::package_ensure', { 'default_value' => 'installed' })`
-    (`init.pp:117`).
+    (`init.pp`).
   - Zone-purge / zone-target / interface / masquerade / tidy parameters
-    (`init.pp:100-116`) feed the `firewalld_zone { '99_simp' }` resource and
+    (`init.pp`) feed the `firewalld_zone { '99_simp' }` resource and
     the tidy resources below.
 
   Control flow and resources (only when `$enable`):
-  - Sets a default `Exec { path => '/usr/bin:/bin' }` (`init.pp:120`).
-  - **firewall_backend guard** (`init.pp:128-133`): the backend is only passed
+  - Sets a default `Exec { path => '/usr/bin:/bin' }` (`init.pp`).
+  - **firewall_backend guard** (`init.pp`): the backend is only passed
     through to the upstream class if `nft` appears in the `simplib__firewalls`
     fact; otherwise `$_firewall_backend = undef`. This works around CentOS
     diverging from upstream firewalld and breaking version matching.
-  - `class { 'firewalld': }` (`init.pp:135-141`) — declares the upstream class
+  - `class { 'firewalld': }` (`init.pp`) — declares the upstream class
     with the translated lockdown, default zone, log_denied, backend, and
     package_ensure.
-  - `firewalld_zone { '99_simp' }` (`init.pp:148-157`) — the SIMP zone;
+  - `firewalld_zone { '99_simp' }` (`init.pp`) — the SIMP zone;
     `require => Service['firewalld']`. Purge flags default to `true`, so
     unmanaged rich rules / services / ports in the zone are removed.
   - Orders `Firewalld_zone['99_simp'] -> Exec['firewalld::set_default_zone']`
-    only when `$default_zone == '99_simp'` (`init.pp:159-161`).
-  - `tidy { $tidy_dirs }` (`init.pp:163-171`) when `$enable_tidy` — cleans stale
+    only when `$default_zone == '99_simp'` (`init.pp`).
+  - `tidy { $tidy_dirs }` (`init.pp`) when `$enable_tidy` — cleans stale
     `simp_`-prefixed files older than `$tidy_minutes` from the firewalld config
     dirs.
   - Iterates `$rules` and declares a `simp_firewalld::rule` per entry
-    (`init.pp:173-177`).
+    (`init.pp`).
 
-- **`simp_firewalld::rule` (`manifests/rule.pp:50-301`)** — Defined type that
+- **`simp_firewalld::rule` (`manifests/rule.pp`)** — Defined type that
   builds firewalld resources from simple inputs. `include simp_firewalld`
-  (`rule.pp:60`), then everything is gated on `$simp_firewalld::enable`; if the
-  class is disabled it emits a `warning()` and does nothing (`rule.pp:298-300`).
+  (`rule.pp`), then everything is gated on `$simp_firewalld::enable`; if the
+  class is disabled it emits a `warning()` and does nothing (`rule.pp`).
   Key parameters:
   - `$protocol` (`Enum['ah','esp','icmp','tcp','udp','all']`, **required**).
   - `$trusted_nets` (`Simplib::Netlist`) — defaults to
     `simplib::lookup('simp_options::trusted_nets', { 'default_value' => ['127.0.0.1'] })`
-    (`rule.pp:52`).
+    (`rule.pp`).
   - `$dports` (`Optional[Simp_firewalld::DestPort]`), `$icmp_blocks`, `$order`
     (`Integer[0]`, default `11`), `$apply_to` (`Simp_firewalld::ApplyTo`,
     default `'auto'`), `$prefix`, `$zone`.
   - `$prefix` defaults to `pick($simp_firewalld::tidy_prefix, 'simp_')`
-    (`rule.pp:63-68`); `$zone` defaults to
-    `pick($simp_firewalld::default_zone, '99_simp')` (`rule.pp:70-75`).
+    (`rule.pp`); `$zone` defaults to
+    `pick($simp_firewalld::default_zone, '99_simp')` (`rule.pp`).
 
-  Logic (`rule.pp:77-296`):
-  - Sanitizes the resource name into `$_safe_name` (`rule.pp:77`).
+  Logic (`rule.pp`):
+  - Sanitizes the resource name into `$_safe_name` (`rule.pp`).
   - Protocol branching: `icmp` uses `$icmp_blocks`; `ah`/`esp` take no ports;
     otherwise ports are normalized (IPTables `:` range → firewalld `-`) and a
-    `firewalld_custom_service` is created (`rule.pp:79-116`).
-  - **allow-from-all detection** (`rule.pp:118-128`): if `trusted_nets`
+    `firewalld_custom_service` is created (`rule.pp`).
+  - **allow-from-all detection** (`rule.pp`): if `trusted_nets`
     contains `0.0.0.0/0`, `::/0`, `[::]/0`, `ALL`, or `any`, it adds a plain
     `firewalld_service` to the zone (when ports exist) instead of building
     ipsets, since source matching is irrelevant.
@@ -105,43 +105,43 @@ The module has exactly two manifests: the `simp_firewalld` class
     nets via `simplib::ip::family_hash`, builds deterministic `firewalld_ipset`
     resources (`hash:ip` / `hash:net`, name seeded via `seeded_rand_string`,
     truncated to 31 chars), and emits `firewalld_rich_rule` resources per family
-    (`rule.pp:138-295`).
-  - **Hostname warning** (`rule.pp:153-162`): firewalld cannot handle hostnames,
+    (`rule.pp`).
+  - **Hostname warning** (`rule.pp`): firewalld cannot handle hostnames,
     so any unresolvable/hostname entries in `trusted_nets` trigger a `notify`
     with `loglevel => 'warning'` and are dropped from the hash.
   - Works around a `puppet-firewalld` bug by ordering the custom service before
-    its rich rule (`rule.pp:287-290`).
+    its rich rule (`rule.pp`).
 
 ### Gotchas / non-obvious details
 
 - **Everything is gated on `$enable`.** The class body and the entire
   `simp_firewalld::rule` body only run when `$simp_firewalld::enable` is true.
-  `$enable` auto-detects from the `simplib__firewalls` fact (`init.pp:96`); a
+  `$enable` auto-detects from the `simplib__firewalls` fact (`init.pp`); a
   rule declared while the class is disabled just logs a warning
-  (`rule.pp:298-300`).
+  (`rule.pp`).
 - **This module only manages the `99_simp` zone.** Changing `$default_zone`
   away from `99_simp` means the module's rules no longer apply to the default
-  zone (`init.pp:45-53`). To override arbitrary firewalld settings, use Hiera on
+  zone (`init.pp`). To override arbitrary firewalld settings, use Hiera on
   the upstream `firewalld` class directly, not on `simp_firewalld`
-  (`init.pp:3-4`).
+  (`init.pp`).
 - **Complete reloads are disabled by default.** `$complete_reload => false`
   neuters the upstream `firewall-cmd --complete-reload` exec via a resource
-  collector (`init.pp:143-146`), because a full reload drops all connections.
+  collector (`init.pp`), because a full reload drops all connections.
 - **The firewall backend is conditionally suppressed.** Even though
   `$firewall_backend` has a value, it is only forwarded to the upstream class
-  when `nft` is in the `simplib__firewalls` fact (`init.pp:128-133`) — a
+  when `nft` is in the `simplib__firewalls` fact (`init.pp`) — a
   workaround for CentOS's divergence from upstream firewalld version matching.
 - **firewalld cannot use hostnames in `trusted_nets`.** Hostname entries are
-  warned about and silently dropped (`rule.pp:153-162`); only IP addresses /
+  warned about and silently dropped (`rule.pp`); only IP addresses /
   CIDRs make it into ipsets.
 - **ipset names are deterministic but truncated.** They are seeded with
   `seeded_rand_string` over the family/type/nets and cut to 31 chars
-  (`rule.pp:206-213`) due to ipset name-length limits; the acceptance spec
-  hard-codes the expected names (`spec/acceptance/suites/default/00_default_spec.rb:72-73`).
+  (`rule.pp`) due to ipset name-length limits; the acceptance spec
+  hard-codes the expected names (`spec/acceptance/suites/default/00_default_spec.rb`).
 - **`simp/simp_options` is NOT a declared dependency** in `metadata.json`, yet
   both manifests consume the `simp_options::*` seam via `simplib::lookup`
   (provided by `simp/simplib`). `simp_options` appears only as a fixture
-  (`.fixtures.yml:6`).
+  (`.fixtures.yml`).
 - **No `assert_private()` calls** — both the class and the define are public and
   intended to be declared directly.
 
@@ -150,10 +150,10 @@ The module has exactly two manifests: the `simp_firewalld` class
 This is the module's SIMP-integration seam (the natural target for a
 lookup-path unit test):
 
-| Line | Key | `default_value` |
+| File | Key | `default_value` |
 |------|-----|-----------------|
-| `init.pp:117` | `simp_options::package_ensure` | `'installed'` |
-| `rule.pp:52` | `simp_options::trusted_nets` | `['127.0.0.1']` |
+| `init.pp` | `simp_options::package_ensure` | `'installed'` |
+| `rule.pp` | `simp_options::trusted_nets` | `['127.0.0.1']` |
 
 Keep routing SIMP feature toggles through `simplib::lookup('simp_options::*', {
 'default_value' => ... })` with an explicit default rather than assuming
@@ -214,10 +214,10 @@ entry — unusual for this module family.)
   from the dependencies above; the only local custom types are the Puppet data
   types in `types/`.
 - **Acceptance runs in CI:** `.github/workflows/pr_tests.yml` has an
-  `acceptance` job (`pr_tests.yml:120`) that runs on **docker nodes** via
+  `acceptance` job (`pr_tests.yml`) that runs on **docker nodes** via
   podman — matrix `docker_alma8/9/10`, `docker_centos9/10`, `docker_oel8/9/10`,
   `docker_rocky8/9/10` — setting
-  `DOCKER_HOST=unix:///run/user/$(id -u)/podman/podman.sock` (`pr_tests.yml:151`)
+  `DOCKER_HOST=unix:///run/user/$(id -u)/podman/podman.sock` (`pr_tests.yml`)
   rather than a `BEAKER_HYPERVISOR: vagrant_libvirt` var. It runs
   `bundle exec rake beaker:suites[default,<node>]`. Alongside it are the
   standard `puppet-syntax`, `puppet-style`, `ruby-style`, `file-checks`,
@@ -250,12 +250,12 @@ bundle exec rake beaker:suites[default,docker_alma9]
 ```
 
 Relevant gem pins (from `Gemfile`): the Puppet gem range defaults to
-`['>= 7', '< 9']` (`Gemfile:23`) and only the **puppet** gem is installed —
-`gem 'puppet', puppet_version` (`Gemfile:29`), no openvox gem. Other pins:
-`rubocop ~> 1.88.0` (`Gemfile:16`), `puppetlabs_spec_helper ~> 8.0.0`
-(`Gemfile:30`), `simp-rake-helpers ~> 5.24.0` (`Gemfile:36`),
-`simp-beaker-helpers ~> 2.0.0` (`Gemfile:53`).
-`spec/spec_helper.rb:11` requires `puppetlabs_spec_helper/module_spec_helper`.
+`['>= 7', '< 9']` (`Gemfile`) and only the **puppet** gem is installed —
+`gem 'puppet', puppet_version` (`Gemfile`), no openvox gem. Other pins:
+`rubocop ~> 1.88.0` (`Gemfile`), `puppetlabs_spec_helper ~> 8.0.0`
+(`Gemfile`), `simp-rake-helpers ~> 5.24.0` (`Gemfile`),
+`simp-beaker-helpers ~> 2.0.0` (`Gemfile`).
+`spec/spec_helper.rb` requires `puppetlabs_spec_helper/module_spec_helper`.
 
 ## Conventions
 

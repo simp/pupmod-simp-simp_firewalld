@@ -151,7 +151,6 @@ define simp_firewalld::rule (
         $_tmp_nets_hash = simplib::ip::family_hash($_trusted_nets)
 
         if $_tmp_nets_hash['unknown'] {
-
           $_msg_string = join($_tmp_nets_hash['unknown'].keys, ', ')
 
           notify { "${module_name}::rule[${_safe_name}] - hostname warning":
@@ -169,12 +168,11 @@ define simp_firewalld::rule (
       $_trusted_nets_hash.keys.each |$_ip_family| {
         # Only activate on the correct type of IP address
         if ($apply_to == 'all') or ($apply_to == 'auto') or ($apply_to == $_ip_family) {
-
           # Determine what can go into an IPSet and what can't
-          $_split_entries = $_trusted_nets_hash[$_ip_family].reduce({'hash:ip' => [], 'hash:net' => []}) |$memo, $x| {
+          $_split_entries = $_trusted_nets_hash[$_ip_family].reduce({ 'hash:ip' => [], 'hash:net' => [] }) |$memo, $x| {
             $_data = $x[-1]
             if (($_ip_family == 'ipv4') and ($_data['netmask']['cidr'] == 32)) or
-              (($_ip_family == 'ipv6') and ($_data['netmask']['cidr'] == 128)) {
+            (($_ip_family == 'ipv6') and ($_data['netmask']['cidr'] == 128)) {
               {
                 # firewall-cmd can't handle bracketed addresses for IPv6
                 'hash:ip'  => $memo['hash:ip'] + $_data['address'],
@@ -210,8 +208,7 @@ define simp_firewalld::rule (
                     26,
                     join([$_ipset_family, $_ipset_type] + sort(unique($_trusted_nets)) + $_ipset_entries,'')
                   )
-                ], '-')[0,31]
-
+              ], '-')[0,31]
 
               if $_allow_from_all {
                 $_source = $_ipset_entries[0]
@@ -233,13 +230,13 @@ define simp_firewalld::rule (
 
               # We need this because the underlying types can't handle Arrays
               $_unique_name = regsubst(
-                  join([
-                    'simp',
-                    $order,
-                    $_safe_name,
-                    $_ipset_name,
-                  ], '_'),
-                '_+', '_', 'G')
+                join([
+                  'simp',
+                  $order,
+                  $_safe_name,
+                  $_ipset_name,
+                ], '_'),
+              '_+', '_', 'G')
 
               if $protocol == 'icmp' {
                 firewalld_rich_rule { $_unique_name:

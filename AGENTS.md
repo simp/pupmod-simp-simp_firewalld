@@ -193,8 +193,7 @@ entry — unusual for this module family.)
 - `manifests/rule.pp` — the `simp_firewalld::rule` defined type (rule builder).
 - `types/applyto.pp` — `Simp_firewalld::ApplyTo` (`ipv4`/`ipv6`/`all`/`auto`).
 - `types/destport.pp` — `Simp_firewalld::DestPort` (port / range / array).
-- `types/portrange.pp` — `Simp_firewalld::PortRange` (firewalld `NNN:NNN`
-  range pattern).
+- `types/portrange.pp` — `Simp_firewalld::PortRange` (iptables-style `NNN:NNN` colon-separated range; `rule.pp` converts the `:` to firewalld's `-` on emit).
 - `data/common.yaml` — defaults: `firewall_backend: nftables`, `rules: {}`.
 - `data/os/*.yaml` — per-OS `firewall_backend` overrides (`iptables` for Amazon
   and RedHat-8.0/8.1; `nftables` for RedHat-8/9/10).

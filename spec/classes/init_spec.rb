@@ -3,12 +3,19 @@ require 'spec_helper'
 describe 'simp_firewalld' do
   context 'supported operating systems' do
     on_supported_os.each do |os, os_facts|
-      let(:facts) do
-        os_facts.merge(simplib__firewalls: ['iptables', 'firewalld'])
-      end
+      let(:facts) { os_facts }
 
       context "on #{os}" do
         context 'without any parameters' do
+          # The default backend comes from module data (nftables everywhere
+          # except EL 8.0/8.1 and Amazon Linux)
+          expected_backend =
+            if os_facts[:os][:name] == 'Amazon'
+              'iptables'
+            else
+              'nftables'
+            end
+
           it { is_expected.to compile.with_all_deps }
           it { is_expected.to create_class('simp_firewalld').with_enable(true) }
 
@@ -17,7 +24,7 @@ describe 'simp_firewalld' do
               .with_lockdown('yes')
               .with_default_zone('99_simp')
               .with_log_denied('unicast')
-              .with_firewall_backend(nil)
+              .with_firewall_backend(expected_backend)
               .with_package_ensure('installed')
           }
 
@@ -38,13 +45,18 @@ describe 'simp_firewalld' do
           it { is_expected.to create_tidy('/etc/firewalld/ipsets').with_matches(['simp_']) }
         end
 
-        context 'with nftables' do
-          let(:facts) do
-            os_facts.merge(simplib__firewalls: ['iptables', 'firewalld', 'nft'])
-          end
+        context 'with enable => false' do
+          let(:params) { { enable: false } }
+
+          it { is_expected.to compile.with_all_deps }
+          it { is_expected.not_to create_class('firewalld') }
+          it { is_expected.not_to create_firewalld_zone('99_simp') }
+        end
+
+        context 'with an explicit iptables firewall_backend' do
           let(:params) do
             {
-              firewall_backend: 'nftables',
+              firewall_backend: 'iptables',
             }
           end
 
@@ -53,18 +65,14 @@ describe 'simp_firewalld' do
               .with_lockdown('yes')
               .with_default_zone('99_simp')
               .with_log_denied('unicast')
-              .with_firewall_backend('nftables')
+              .with_firewall_backend('iptables')
               .with_package_ensure('installed')
           }
         end
 
         context 'adding port 22 rule' do
-          let(:facts) do
-            os_facts.merge(simplib__firewalls: ['iptables', 'firewalld', 'nft'])
-          end
           let(:params) do
             {
-              firewall_backend: 'nftables',
               rules: {
                 'add_port_22' => {
                   'protocol' => 'tcp',

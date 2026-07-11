@@ -9,12 +9,13 @@ describe 'simp_firewalld' do
         context 'without any parameters' do
           # The default backend comes from module data (nftables everywhere
           # except EL 8.0/8.1 and Amazon Linux)
-          expected_backend =
+          let(:expected_backend) do
             if os_facts[:os][:name] == 'Amazon'
               'iptables'
             else
               'nftables'
             end
+          end
 
           it { is_expected.to compile.with_all_deps }
           it { is_expected.to create_class('simp_firewalld').with_enable(true) }

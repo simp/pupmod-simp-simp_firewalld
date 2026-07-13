@@ -101,10 +101,10 @@ class simp_firewalld (
   Boolean                                              $enable_tidy                = true,
   # lint:ignore:2sp_soft_tabs
   Array[Stdlib::Absolutepath]                          $tidy_dirs                  = [
-                                                                                      '/etc/firewalld/icmptypes',
-                                                                                      '/etc/firewalld/ipsets',
-                                                                                      '/etc/firewalld/services',
-                                                                                    ],
+    '/etc/firewalld/icmptypes',
+    '/etc/firewalld/ipsets',
+    '/etc/firewalld/services',
+  ],
   # lint:endignore
   String[1]                                            $tidy_prefix                = 'simp_',
   Integer[1]                                           $tidy_minutes               = 10,

@@ -76,11 +76,15 @@ Data type: `Hash`
 
 A hash of firewalld::rules that should be created
 
+Default value: `{}`
+
 ##### <a name="-simp_firewalld--firewall_backend"></a>`firewall_backend`
 
 Data type: `Enum['iptables','nftables']`
 
 Allows you to set the backend that firewalld will use.
+
+Default value: `'nftables'`
 
 ##### <a name="-simp_firewalld--enable"></a>`enable`
 

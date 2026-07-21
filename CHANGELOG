@@ -1,3 +1,8 @@
+* Thu Jul 16 2026 Nicholas Markowski <nicholas.markowski@onyxpoint.com> - 2.0.2
+- Expand `protocol => 'all'` to paired tcp+udp entries when `dports` is set,
+  so `simp_firewalld::rule` no longer produces a `firewalld_custom_service`
+  that fails validation (#53)
+
 * Thu Jul 09 2026 Steven Pritchard <steve@sicura.us> - 2.0.1
 - Resolved puppet-lint manifest whitespace offenses
 
@@ -8,7 +13,6 @@
 - Allow newer SIMP module dependencies (see metadata.json diff)
 - Sync Gemfile with current puppetsync baseline (adds OpenVox to test gems)
 - Drop Puppet 7 / Ruby 2.7 from GitHub Actions; use Ruby 3.2.11 with OpenVox 8 and 3.4.9 elsewhere
-
 * Tue May 12 2026 Steven Pritchard <steve@sicura.us> - 1.0.1
 - Support Oracle/Rocky 10
 

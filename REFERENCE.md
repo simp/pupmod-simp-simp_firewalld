@@ -165,10 +165,10 @@ Default value:
 
 ```puppet
 [
-                                                                                      '/etc/firewalld/icmptypes',
-                                                                                      '/etc/firewalld/ipsets',
-                                                                                      '/etc/firewalld/services',
-                                                                                    ]
+    '/etc/firewalld/icmptypes',
+    '/etc/firewalld/ipsets',
+    '/etc/firewalld/services',
+  ]
 ```
 
 ##### <a name="-simp_firewalld--tidy_prefix"></a>`tidy_prefix`
@@ -276,6 +276,10 @@ Default value: `simplib::lookup('simp_options::trusted_nets', { 'default_value' 
 Data type: `Enum['ah', 'esp', 'icmp', 'tcp', 'udp', 'all']`
 
 The network protocol to which the rule applies
+
+* When `dports` is also set, `'all'` is expanded to both `tcp` and `udp`
+  entries on the generated service, since firewalld services are
+  protocol-scoped and do not have a true "any protocol" port form.
 
 ##### <a name="-simp_firewalld--rule--dports"></a>`dports`
 

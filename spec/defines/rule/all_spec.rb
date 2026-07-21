@@ -193,6 +193,35 @@ describe 'simp_firewalld::rule', type: :define do
             end
           end
         end
+
+        # Regression: protocol => 'all' with dports must expand to both tcp and
+        # udp entries because firewalld_custom_service requires a protocol on
+        # every port hash (see issue #53).
+        context 'with protocol => all and dports' do
+          let(:title) { 'allow_all_ports' }
+
+          let(:params) do
+            {
+              protocol: 'all',
+              trusted_nets: ipv4_nets,
+              dports: [80, '1000:2000'],
+            }
+          end
+
+          it { is_expected.to compile.with_all_deps }
+
+          it do
+            is_expected.to create_firewalld_custom_service("simp_#{title}")
+              .with(
+                ports: [
+                  { 'port' => '80',        'protocol' => 'tcp' },
+                  { 'port' => '80',        'protocol' => 'udp' },
+                  { 'port' => '1000-2000', 'protocol' => 'tcp' },
+                  { 'port' => '1000-2000', 'protocol' => 'udp' },
+                ],
+              )
+          end
+        end
       end
     end
   end

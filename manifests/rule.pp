@@ -6,6 +6,10 @@
 # @param protocol
 #   The network protocol to which the rule applies
 #
+#   * When `dports` is also set, `'all'` is expanded to both `tcp` and `udp`
+#     entries on the generated service, since firewalld services are
+#     protocol-scoped and do not have a true "any protocol" port form.
+#
 # @param dports
 #   The ports to which the rule applies
 #
@@ -86,19 +90,17 @@ define simp_firewalld::rule (
     else {
       if $dports {
         $_dports_a = Array($dports, true)
-        $_dports = $_dports_a.map |$dport| {
+        # firewalld_custom_service requires a protocol on every port entry, so
+        # 'all' is expanded to tcp+udp rather than left unset.
+        $_protocols = $protocol ? { 'all' => ['tcp', 'udp'], default => [$protocol] }
+        $_dports = $_dports_a.reduce([]) |$_memo, $dport| {
           # Convert all IPTables range formats over to firewalld formats
           $_converted_port = regsubst("${dport}",':','-') # lint:ignore:only_variable_string
 
-          if $protocol != 'all' {
+          $_memo + $_protocols.map |$_proto| {
             {
               'port'     => $_converted_port,
-              'protocol' => $protocol
-            }
-          }
-          else {
-            {
-              'port' => $_converted_port
+              'protocol' => $_proto,
             }
           }
         }

@@ -1,3 +1,6 @@
+* Mon Aug 24 2026 Steven Pritchard <steve@sicura.us> - 2.0.3
+- [puppetsync] Update metadata.json dependency ranges from the Forge
+
 * Thu Jul 16 2026 Nicholas Markowski <nicholas.markowski@onyxpoint.com> - 2.0.2
 - Expand `protocol => 'all'` to paired tcp+udp entries when `dports` is set,
   so `simp_firewalld::rule` no longer produces a `firewalld_custom_service`

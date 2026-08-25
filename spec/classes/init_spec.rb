@@ -10,7 +10,9 @@ describe 'simp_firewalld' do
           # The default backend comes from module data (nftables everywhere
           # except EL 8.0/8.1 and Amazon Linux)
           let(:expected_backend) do
-            if os_facts[:os][:name] == 'Amazon'
+            release = os_facts[:os][:release]
+            if os_facts[:os][:name] == 'Amazon' ||
+               (os_facts[:os][:family] == 'RedHat' && release[:major] == '8' && ['0', '1'].include?(release[:minor]))
               'iptables'
             else
               'nftables'

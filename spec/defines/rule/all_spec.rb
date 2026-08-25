@@ -15,7 +15,7 @@ describe 'simp_firewalld::rule', type: :define do
     on_supported_os.each do |os, os_facts|
       context "on #{os}" do
         let(:facts) do
-          os_facts.merge(simplib__firewalls: ['iptables', 'firewalld'])
+          os_facts
         end
 
         let(:ipv4_nets) do

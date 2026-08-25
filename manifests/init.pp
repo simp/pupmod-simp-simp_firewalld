@@ -22,11 +22,11 @@
 #   Allows you to set the backend that firewalld will use.
 #
 # @param enable
-#   Activate the firewalld management capabilties.
+#   Activate the firewalld management capabilities.
 #
-#   * The class will not be enabled if firewalld is not detected on the remote
-#     system. This can be overridden by setting this option to `true`
-#     explicitly in Hiera.
+#   * No autodetection of the underlying system is performed; set this to
+#     `false` explicitly (via class parameter or Hiera) on systems where
+#     firewalld should not be managed.
 #
 # @param complete_reload
 #   The current firewalld module has the capability to perform a complete reload
@@ -93,7 +93,7 @@
 class simp_firewalld (
   Hash                                                 $rules,                     # data in module
   Enum['iptables','nftables']                          $firewall_backend,          # data in module
-  Boolean                                              $enable                     = 'firewalld' in pick($facts['simplib__firewalls'], 'none'),
+  Boolean                                              $enable                     = true,
   Boolean                                              $complete_reload            = false,
   Boolean                                              $lockdown                   = true,
   String[1]                                            $default_zone               = '99_simp',
@@ -122,21 +122,11 @@ class simp_firewalld (
     # Upstream module only takes yes/no values
     $_lockdown_xlat = $lockdown ? { true => 'yes', default => 'no' }
 
-    # The upstream module should handle this properly but it looks like CentOS
-    # may have diverted from the upstream firewalld code making version
-    # matching impossible.
-    if 'nft' in pick($facts.dig('simplib__firewalls'), []) {
-      $_firewall_backend = $firewall_backend
-    }
-    else {
-      $_firewall_backend = undef
-    }
-
     class { 'firewalld':
       lockdown         => $_lockdown_xlat,
       default_zone     => $default_zone,
       log_denied       => $log_denied,
-      firewall_backend => $_firewall_backend,
+      firewall_backend => $firewall_backend,
       package_ensure   => $package_ensure,
     }
 

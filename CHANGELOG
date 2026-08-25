@@ -1,3 +1,10 @@
+* Tue Aug 25 2026 Steven Pritchard <steve@sicura.us> - 3.0.0
+- Enable firewalld management by default: `simp_firewalld::enable` now
+  defaults to `true` instead of being derived from the `simplib__firewalls`
+  fact; disable it explicitly via class parameter or Hiera where needed
+- Always pass `firewall_backend` (from module data or Hiera) through to the
+  `firewalld` class instead of gating it on detection of an `nft` binary
+
 * Mon Aug 24 2026 Steven Pritchard <steve@sicura.us> - 2.0.3
 - [puppetsync] Update metadata.json dependency ranges from the Forge
 

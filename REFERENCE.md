@@ -90,13 +90,13 @@ Default value: `'nftables'`
 
 Data type: `Boolean`
 
-Activate the firewalld management capabilties.
+Activate the firewalld management capabilities.
 
-* The class will not be enabled if firewalld is not detected on the remote
-  system. This can be overridden by setting this option to `true`
-  explicitly in Hiera.
+* No autodetection of the underlying system is performed; set this to
+  `false` explicitly (via class parameter or Hiera) on systems where
+  firewalld should not be managed.
 
-Default value: `'firewalld' in pick($facts['simplib__firewalls'], 'none')`
+Default value: `true`
 
 ##### <a name="-simp_firewalld--complete_reload"></a>`complete_reload`
 

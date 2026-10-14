@@ -14,4 +14,4 @@ HOSTS:
 CONFIG:
   type: aio
   log_level: verbose
-  puppet_collection: "<%= ENV.fetch('BEAKER_PUPPET_COLLECTION', 'openvox8') %>"
+  puppet_collection: "<%= ENV.fetch('BEAKER_PUPPET_COLLECTION', 'openvox9') %>"

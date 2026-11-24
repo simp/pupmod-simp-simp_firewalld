@@ -41,6 +41,8 @@
 #
 #   * This makes sense to do by default since puppet is meant to be
 #     authoritative on the system.
+#   * Has no effect on EL10 and later, where ``firewalld`` removed the
+#     lockdown feature. The setting is left unmanaged there.
 #
 # @param default_zone
 #   The 'default zone' to set on the system.
@@ -119,8 +121,13 @@ class simp_firewalld (
   if $enable {
     Exec { path => '/usr/bin:/bin' }
 
-    # Upstream module only takes yes/no values
-    $_lockdown_xlat = $lockdown ? { true => 'yes', default => 'no' }
+    # Upstream module only takes yes/no values. firewalld removed the
+    # lockdown feature in EL10, so leave the setting unmanaged there.
+    if versioncmp($facts['os']['release']['major'], '10') >= 0 {
+      $_lockdown_xlat = undef
+    } else {
+      $_lockdown_xlat = $lockdown ? { true => 'yes', default => 'no' }
+    }
 
     class { 'firewalld':
       lockdown         => $_lockdown_xlat,

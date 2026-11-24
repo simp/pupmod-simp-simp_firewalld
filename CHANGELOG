@@ -1,3 +1,7 @@
+* Tue Nov 24 2026 Hazel Caballero <hazel@sicura.us> - 3.1.2
+- `simp_firewalld::lockdown` is no longer written on EL10, where firewalld
+  removed the lockdown feature and ignores the setting
+
 * Mon Nov 23 2026 Hazel Caballero <hazel@sicura.us> - 3.1.1
 - `simp_firewalld::rule` now calls `stdlib::seeded_rand_string()` instead of
   the deprecated `seeded_rand_string()`. Existing ipset names do not change.

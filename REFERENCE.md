@@ -119,6 +119,8 @@ applications.
 
 * This makes sense to do by default since puppet is meant to be
   authoritative on the system.
+* Has no effect on EL10 and later, where ``firewalld`` removed the
+  lockdown feature. The setting is left unmanaged there.
 
 Default value: `true`
 
